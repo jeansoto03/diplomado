@@ -612,6 +612,29 @@
         },
       ];
 
+      function fetchProductosFromEndpoint() {
+        fetch("http://localhost/diplomado/backend/productos/traerProductos.php")
+          .then((response) => {
+            if (!response.ok) throw new Error("Error al obtener productos");
+            return response.json();
+          })
+          .then((data) => {
+            if (data.success && Array.isArray(data.productos)) {
+              
+              console.log("Productos obtenidos del endpoint:", data.productos);
+              
+            } else {
+              throw new Error(data.message || "Error en la respuesta de productos");
+            }
+          })
+          .catch((error) => {
+            console.error("Error al obtener productos:", error);
+          });
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        fetchProductosFromEndpoint();
+      });
       const loginForm = document.getElementById("loginForm");
       const registerForm = document.getElementById("registerForm");
       const showRegisterBtn = document.getElementById("showRegister");

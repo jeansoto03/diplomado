@@ -3,7 +3,7 @@
 <aside class="aside is-placed-left is-expanded">
   <div class="aside-tools">
     <div class="aside-tools-label">
-      <span><b>HJD</b> Inventary</span>
+      <span><b>Party</b>Color</span>
     </div>
   </div>
   <div class="menu is-menu-main">

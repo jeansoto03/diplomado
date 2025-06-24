@@ -155,32 +155,7 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['name'])) {
             </div>
           </div>
         </div>
-        <div class="card">
-          <header class="card-header">
-            <p class="card-header-title">
-              <span class="icon"><i class="mdi mdi-finance"></i></span>
-              Performance
-            </p>
-            <a href="#" class="card-header-icon">
-              <span class="icon"><i class="mdi mdi-reload"></i></span>
-            </a>
-          </header>
-          <div class="card-content">
-            <div class="chart-area">
-              <div style="height: 100%;">
-                <div class="chartjs-size-monitor">
-                  <div class="chartjs-size-monitor-expand">
-                    <div></div>
-                  </div>
-                  <div class="chartjs-size-monitor-shrink">
-                    <div></div>
-                  </div>
-                </div>
-                <canvas id="myChart" width="2992" height="1000" class="chartjs-render-monitor" style="display: block; height: 400px; width: 1197px;"></canvas>
-              </div>
-            </div>
-          </div>
-        </div>
+       
 
       </section>
       <!-- Inicio footer -->
@@ -210,8 +185,7 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['name'])) {
     <!-- Scripts below are for demo only -->
     <script src="../assets/js/jquery-3.6.0.js"></script>
     <script type="text/javascript" src="../assets/js/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script type="text/javascript" src="../assets/js/chart.sample.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
     <script type="text/javascript" src="../assets/js/cndDatatable.js"></script>
     <script src="../assets/js/datatableModel.js"></script>
 

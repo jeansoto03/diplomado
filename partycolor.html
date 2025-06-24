@@ -1,1419 +1,1192 @@
 <html lang="es">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
   <title>
-   Stock de Productos - Login
+    Stock de Productos - Login
   </title>
   <script src="https://cdn.tailwindcss.com">
   </script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
   </script>
   <style>
-   /* media queries navbar responsive */
-      @media (max-width: 768px) {
-        nav div.flex.items-center.space-x-6 {
-          flex-wrap: wrap;
-          justify-content: center;
-          gap: 0.75rem;
-        }
-        nav div.flex.items-center.space-x-6 button {
-          flex: 1 1 45%;
-          text-align: center;
-        }
-        nav div.flex.items-center.space-x-4.text-sm.md\:text-base {
-          justify-content: center;
-          margin-top: 0.5rem;
-        }
+    /* media queries navbar responsive */
+    @media (max-width: 768px) {
+      nav div.flex.items-center.space-x-6 {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem;
       }
-      @media (max-width: 480px) {
-        nav div.flex.items-center.space-x-6 button {
-          flex: 1 1 100%;
-        }
-        nav div.flex.items-center.space-x-4.text-sm.md\:text-base {
-          flex-wrap: wrap;
-          gap: 0.5rem;
-        }
+
+      nav div.flex.items-center.space-x-6 button {
+        flex: 1 1 45%;
+        text-align: center;
       }
-      /* Navbar hover and focus styles */
-      nav button, nav span {
-        transition: color 0.3s ease, background-color 0.3s ease;
-        border-radius: 0.375rem; /* rounded-md */
-        padding: 0.25rem 0.5rem;
+
+      nav div.flex.items-center.space-x-4.text-sm.md\:text-base {
+        justify-content: center;
+        margin-top: 0.5rem;
       }
-      nav button:hover, nav button:focus-visible {
-        background-color: #1f2937; /* dark slate gray */
-        color: #f9fafb; /* near white */
-        outline: none;
+    }
+
+    @media (max-width: 480px) {
+      nav div.flex.items-center.space-x-6 button {
+        flex: 1 1 100%;
       }
-      nav span:hover, nav span:focus-visible {
-        color: #1f2937;
-        cursor: default;
+
+      nav div.flex.items-center.space-x-4.text-sm.md\:text-base {
+        flex-wrap: wrap;
+        gap: 0.5rem;
       }
+    }
+
+    /* Navbar hover and focus styles */
+    nav button,
+    nav span {
+      transition: color 0.3s ease, background-color 0.3s ease;
+      border-radius: 0.375rem;
+      /* rounded-md */
+      padding: 0.25rem 0.5rem;
+    }
+
+    nav button:hover,
+    nav button:focus-visible {
+      background-color: #1f2937;
+      /* dark slate gray */
+      color: #f9fafb;
+      /* near white */
+      outline: none;
+    }
+
+    nav span:hover,
+    nav span:focus-visible {
+      color: #1f2937;
+      cursor: default;
+    }
   </style>
- </head>
- <body class="bg-gray-100 font-sans">
+</head>
+
+<body class="bg-gray-100 font-sans">
   <div class="min-h-screen flex items-center justify-center px-4" id="app">
-   <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-8">
-    <form class="space-y-6" id="loginForm" onsubmit="return false" style="display: block">
-     <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">
-      Iniciar Sesión como admin
-     </h2>
-     <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1" for="loginEmail">
-       Correo electrónico
-      </label>
-      <input class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600" id="loginEmail" placeholder="usuario@ejemplo.com" required="" type="email"/>
-     </div>
-     <div class="relative">
-      <label class="block text-sm font-medium text-gray-700 mb-1" for="loginPassword">
-       Contraseña
-      </label>
-      <input class="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-600" id="loginPassword" placeholder="********" required="" type="password"/>
-      <button aria-label="Mostrar contraseña" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none" id="toggleLoginPassword" type="button">
-       <i class="fas fa-eye">
-       </i>
-      </button>
-     </div>
-     <button class="w-full bg-indigo-600 text-white font-semibold py-2 rounded hover:bg-indigo-700 transition" id="loginBtn" type="submit">
-      Iniciar Sesión
-     </button>
-     <p class="text-center text-sm text-gray-600">
-      ¿No tienes cuenta?
-      <button class="text-indigo-600 font-semibold hover:underline focus:outline-none" id="showRegister">
-       Regístrate
-      </button>
-     </p>
-    </form>
-    <form class="space-y-6" id="registerForm" onsubmit="return false" style="display: none">
-     <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">
-      Registro de Usuario
-     </h2>
-     <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1" for="registerName">
-       Nombre completo
-      </label>
-      <input class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600" id="registerName" placeholder="Juan Pérez" required="" type="text"/>
-     </div>
-     <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1" for="registerEmail">
-       Correo electrónico
-      </label>
-      <input class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600" id="registerEmail" placeholder="usuario@ejemplo.com" required="" type="email"/>
-     </div>
-     <div class="relative">
-      <label class="block text-sm font-medium text-gray-700 mb-1" for="registerPassword">
-       Contraseña
-      </label>
-      <input class="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-600" id="registerPassword" placeholder="********" required="" type="password"/>
-      <button aria-label="Mostrar contraseña" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none" id="toggleRegisterPassword" type="button">
-       <i class="fas fa-eye">
-       </i>
-      </button>
-     </div>
-     <button class="w-full bg-indigo-600 text-white font-semibold py-2 rounded hover:bg-indigo-700 transition" id="registerBtn" type="submit">
-      Registrarse
-     </button>
-     <p class="text-center text-sm text-gray-600">
-      ¿Ya tienes cuenta?
-      <button class="text-indigo-600 font-semibold hover:underline focus:outline-none" id="showLogin">
-       Inicia sesión
-      </button>
-     </p>
-    </form>
-   </div>
+    <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-8">
+      <form class="space-y-6" id="loginForm" onsubmit="return false" style="display: block">
+        <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">
+          Iniciar Sesión como admin
+        </h2>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1" for="loginEmail">
+            Correo electrónico
+          </label>
+          <input
+            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            id="loginEmail" placeholder="usuario@ejemplo.com" required="" type="email" />
+        </div>
+        <div class="relative">
+          <label class="block text-sm font-medium text-gray-700 mb-1" for="loginPassword">
+            Contraseña
+          </label>
+          <input
+            class="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            id="loginPassword" placeholder="********" required="" type="password" />
+          <button aria-label="Mostrar contraseña"
+            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none"
+            id="toggleLoginPassword" type="button">
+            <i class="fas fa-eye">
+            </i>
+          </button>
+        </div>
+        <button class="w-full bg-indigo-600 text-white font-semibold py-2 rounded hover:bg-indigo-700 transition"
+          id="loginBtn" type="submit">
+          Iniciar Sesión
+        </button>
+        <p class="text-center text-sm text-gray-600">
+          ¿No tienes cuenta?
+          <button class="text-indigo-600 font-semibold hover:underline focus:outline-none" id="showRegister">
+            Regístrate
+          </button>
+        </p>
+      </form>
+      <form class="space-y-6" id="registerForm" onsubmit="return false" style="display: none">
+        <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">
+          Registro de Usuario
+        </h2>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1" for="registerName">
+            Nombre completo
+          </label>
+          <input
+            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            id="registerName" placeholder="Juan Pérez" required="" type="text" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1" for="registerEmail">
+            Correo electrónico
+          </label>
+          <input
+            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            id="registerEmail" placeholder="usuario@ejemplo.com" required="" type="email" />
+        </div>
+        <div class="relative">
+          <label class="block text-sm font-medium text-gray-700 mb-1" for="registerPassword">
+            Contraseña
+          </label>
+          <input
+            class="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            id="registerPassword" placeholder="********" required="" type="password" />
+          <button aria-label="Mostrar contraseña"
+            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none"
+            id="toggleRegisterPassword" type="button">
+            <i class="fas fa-eye">
+            </i>
+          </button>
+        </div>
+        <button class="w-full bg-indigo-600 text-white font-semibold py-2 rounded hover:bg-indigo-700 transition"
+          id="registerBtn" type="submit">
+          Registrarse
+        </button>
+        <p class="text-center text-sm text-gray-600">
+          ¿Ya tienes cuenta?
+          <button class="text-indigo-600 font-semibold hover:underline focus:outline-none" id="showLogin">
+            Inicia sesión
+          </button>
+        </p>
+      </form>
+    </div>
   </div>
   <div class="hidden min-h-screen flex flex-col" id="mainPage">
-   <nav class="bg-white text-gray-800 px-6 py-3 shadow-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between">
-     <div class="flex items-center space-x-6 font-bold text-lg md:text-xl tracking-wide">
-      <span class="text-2xl text-indigo-700 select-none">
-       Party Color 2011
-      </span>
-      <button class="hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-1 px-2 py-1 transition duration-300 rounded-md whitespace-nowrap" id="productosBtn" type="button">
-       Productos
-      </button>
-      <button class="hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-1 px-2 py-1 transition duration-300 rounded-md whitespace-nowrap" id="crearPedidoBtn" type="button">
-       Crear Pedido
-      </button>
-      <button class="hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-1 px-2 py-1 transition duration-300 rounded-md whitespace-nowrap" id="facturasBtn" type="button">
-       Facturas
-      </button>
-      <button class="hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-1 px-2 py-1 transition duration-300 rounded-md whitespace-nowrap" id="contactanosBtn" type="button">
-       Contáctanos
-      </button>
-     </div>
-     <div class="flex items-center space-x-4 text-sm md:text-base mt-2 md:mt-0 flex-wrap justify-center md:justify-start gap-2">
-      <span class="font-semibold text-indigo-700 select-text" id="userEmailDisplay">
-      </span>
-      <button class="bg-indigo-600 text-white font-semibold px-4 py-1 rounded shadow hover:bg-indigo-700 transition duration-200 whitespace-nowrap" id="logoutBtn">
-       Cerrar Sesión
-      </button>
-     </div>
-    </div>
-   </nav>
-   <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    <section id="productosSection">
-     <h1 class="text-indigo-700 font-bold text-xl md:text-2xl text-center mb-6">
-      Stock de Productos
-     </h1>
-     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10" id="productos-container">
-      <article class="bg-white rounded-md shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-       <img alt="Alcancia de lata grande, color metálico con motivos variados, tamaño grande de 23cm, en un bulto de 50 unidades" class="w-full h-48 object-cover bg-gray-200" height="250" src="Img_productos/Alcancia_grande.jpg" width="400"/>
-       <div class="p-4 text-indigo-900 flex-grow flex flex-col">
-        <h2 class="font-bold mb-2">
-         Alcancia grande de lata X 50
-        </h2>
-        <p class="text-sm mb-3 flex-grow">
-         Alcancia  grande (23cm) de diferentes motivos surtidos en un bulto de 50 unidades.
-        </p>
-        <p class="font-bold text-green-800 text-base">
-         Ref 1.5 C/U
-        </p>
-       </div>
-      </article>
-      <article class="bg-white rounded-md shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-       <img alt="Alcancia de lata pequeña, color metálico con motivos variados, tamaño pequeño de 11.5cm, en un bulto de 50 unidades" class="w-full h-48 object-cover bg-gray-200" height="250" src="Img_productos/Alcancia_peq.jpg" width="400"/>
-       <div class="p-4 text-indigo-900 flex-grow flex flex-col">
-        <h2 class="font-bold mb-2">
-         Alcancia pequena de lata X 50
-        </h2>
-        <p class="text-sm mb-3 flex-grow">
-         Alcancia de lata pequena (11,5cm) de diferentes motivos en un bulto de 50 unidades.
-        </p>
-        <p class="font-bold text-green-800 text-base">
-         Ref 1.2 C/U
-        </p>
-       </div>
-      </article>
-      <article class="bg-white rounded-md shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-       <img alt="Alcancia de lata extra grande, color metálico con motivos variados, tamaño extra grande de 33cm, en un bulto de 40 unidades" class="w-full h-48 object-cover bg-gray-200" height="250" src="Img_productos/alcancia_extragrandre.jpg" width="400"/>
-       <div class="p-4 text-indigo-900 flex-grow flex flex-col">
-        <h2 class="font-bold mb-2">
-         Alcancia Extra Grande
-        </h2>
-        <p class="text-sm mb-3 flex-grow">
-         Alcancia de Lata extra grande (33cm) de diversos motivos en un bulto de 40 unidades.
-        </p>
-        <p class="font-bold text-green-800 text-base">
-         Ref 3 C/U
-        </p>
-       </div>
-      </article>
-      <article class="bg-white rounded-md shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-       <img alt="Ludo de caja, juego de mesa clásico en caja rectangular con 12 unidades por paquete" class="w-full h-48 object-cover bg-gray-200" height="250" src="Img_productos/Ludo_caja.jpg" width="400"/>
-       <div class="p-4 text-indigo-900 flex-grow flex flex-col">
-        <h2 class="font-bold mb-2">
-         Ludo
-        </h2>
-        <p class="text-sm mb-3 flex-grow">
-         Ludo de caja de 12 unidades el paquete.
-        </p>
-        <p class="font-bold text-green-800 text-base">
-         Ref 2.8 C/U
-        </p>
-       </div>
-      </article>
-      <article class="bg-white rounded-md shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-       <img alt="Bingo de caja, juego de bingo con 50 cartones, paquete de 12 unidades" class="w-full h-48 object-cover bg-gray-200" height="250" src="Img_productos/Bingo_caja.jpg" width="400"/>
-       <div class="p-4 text-indigo-900 flex-grow flex flex-col">
-        <h2 class="font-bold mb-2">
-         Bingo
-        </h2>
-        <p class="text-sm mb-3 flex-grow">
-         Bingo de caja de 50 cartones, paquete de 12 unidades.
-        </p>
-        <p class="font-bold text-green-800 text-base">
-         Ref 2.8 C/U
-        </p>
-       </div>
-      </article>
-      <article class="bg-white rounded-md shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-       <img alt="Cartulina doble faz de varios colores, bulto de 50 pliegos" class="w-full h-48 object-cover bg-gray-200" height="250" src="Img_productos/Cartulina_dobleFaz.jpg" width="400"/>
-       <div class="p-4 text-indigo-900 flex-grow flex flex-col">
-        <h2 class="font-bold mb-2">
-         Cartulina Doble Faz
-        </h2>
-        <p class="text-sm mb-3 flex-grow">
-         Cartulina doble Faz de varios colores, bulto de 50 pliegos.
-        </p>
-        <p class="font-bold text-green-800 text-base">
-         Ref 0.40 C/U
-        </p>
-       </div>
-      </article>
-      <article class="bg-white rounded-md shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-       <img alt="Cartulina escolar de varios colores, bulto de 100 pliegos" class="w-full h-48 object-cover bg-gray-200" height="250" src="Img_productos/Cartulina_escolar.jpg" width="400"/>
-       <div class="p-4 text-indigo-900 flex-grow flex flex-col">
-        <h2 class="font-bold mb-2">
-         Cartulina Escolar
-        </h2>
-        <p class="text-sm mb-3 flex-grow">
-         Cartulina escolar de diversos colores, bulto de 100 pliegos.
-        </p>
-        <p class="font-bold text-green-800 text-base">
-         Ref 0.30 C/U
-        </p>
-       </div>
-      </article>
-      <article class="bg-white rounded-md shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-       <img alt="Papel bond grande, bulto de 500 pliegos, hojas blancas" class="w-full h-48 object-cover bg-gray-200" height="250" src="Img_productos/Papel_bond.jpg" width="400"/>
-       <div class="p-4 text-indigo-900 flex-grow flex flex-col">
-        <h2 class="font-bold mb-2">
-         Papel Bond
-        </h2>
-        <p class="text-sm mb-3 flex-grow">
-         Papel bond grande, Bulto de 500 pliegos.
-        </p>
-        <p class="font-bold text-green-800 text-base">
-         Ref 70
-        </p>
-       </div>
-      </article>
-      <article class="bg-white rounded-md shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-       <img alt="Monopolio de caja de 12 unidades" class="w-full h-48 object-cover bg-gray-200" height="250" src="Img_productos/monopolio_caja.jpg" width="400"/>
-       <div class="p-4 text-indigo-900 flex-grow flex flex-col">
-        <h2 class="font-bold mb-2">
-         Monopolio de caja
-        </h2>
-        <p class="text-sm mb-3 flex-grow">
-         bulto de monopolio de 12 unidades.
-        </p>
-        <p class="font-bold text-green-800 text-base">
-         Ref 2.8 C/U
-        </p>
-       </div>
-      </article>
-      <article class="bg-white rounded-md shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-       <img alt="Ludo de sobre, bodeguero" class="w-full h-48 object-cover bg-gray-200" height="250" src="Img_productos/Ludo_sobre.jpg" width="400"/>
-       <div class="p-4 text-indigo-900 flex-grow flex flex-col">
-        <h2 class="font-bold mb-2">
-         Ludo de sobre
-        </h2>
-        <p class="text-sm mb-3 flex-grow">
-         Ludo de sobre bodeguero, paquete de 100 unidades.
-        </p>
-        <p class="font-bold text-green-800 text-base">
-         Ref 1 C/U
-        </p>
-       </div>
-      </article>
-      <article class="bg-white rounded-md shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-       <img alt="Bingo de sobre bodeguero de 12 cartones" class="w-full h-48 object-cover bg-gray-200" height="250" src="Img_productos/bingo_sobre.jpg" width="400"/>
-       <div class="p-4 text-indigo-900 flex-grow flex flex-col">
-        <h2 class="font-bold mb-2">
-         Bingo de sobre
-        </h2>
-        <p class="text-sm mb-3 flex-grow">
-         Bingo de sobre bodeguero, 12 cartones, bulto de 100 unidades.
-        </p>
-        <p class="font-bold text-green-800 text-base">
-         Ref 1 C/U
-        </p>
-       </div>
-      </article>
-      <article class="bg-white rounded-md shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-       <img alt="Rompecabezas de diferentes motivos" class="w-full h-48 object-cover bg-gray-200" height="250" src="Img_productos/Rompecabezas.jpg" width="400"/>
-       <div class="p-4 text-indigo-900 flex-grow flex flex-col">
-        <h2 class="font-bold mb-2">
-         Rompecabezas
-        </h2>
-        <p class="text-sm mb-3 flex-grow">
-         Rompecabezas grande de diferentes motivos, 96 unidades el bulto.
-        </p>
-        <p class="font-bold text-green-800 text-base">
-         Ref 1 C/U
-        </p>
-       </div>
-      </article>
-      <article class="bg-white rounded-md shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-       <img alt="Relleno de pinata surtido" class="w-full h-48 object-cover bg-gray-200" height="250" src="Img_productos/relleno_pinata.jpg" width="400"/>
-       <div class="p-4 text-indigo-900 flex-grow flex flex-col">
-        <h2 class="font-bold mb-2">
-         Relleno de pinata.
-        </h2>
-        <p class="text-sm mb-3 flex-grow">
-         Relleno de pinata surtido, 12 unidades el bulto.
-        </p>
-        <p class="font-bold text-green-800 text-base">
-         Ref 4 C/U
-        </p>
-       </div>
-      </article>
-      <article class="bg-white rounded-md shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-       <img alt="Cartulina fosforecente de varios colores" class="w-full h-48 object-cover bg-gray-200" height="250" src="Img_productos/cartulina_fosforecente.jpg" width="400"/>
-       <div class="p-4 text-indigo-900 flex-grow flex flex-col">
-        <h2 class="font-bold mb-2">
-         Cartulina fosforecente
-        </h2>
-        <p class="text-sm mb-3 flex-grow">
-         Cartulina fosforecente de varios colores, 100 pliegos el paquete.
-        </p>
-        <p class="font-bold text-green-800 text-base">
-         Ref 0.60 C/U
-        </p>
-       </div>
-      </article>
-      <article class="bg-white rounded-md shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-       <img alt="block construccion" class="w-full h-48 object-cover bg-gray-200" height="250" src="Img_productos/block_construccion.jpg" width="400"/>
-       <div class="p-4 text-indigo-900 flex-grow flex flex-col">
-        <h2 class="font-bold mb-2">
-         Block de construccion 10H
-        </h2>
-        <p class="text-sm mb-3 flex-grow">
-         Block de construccion de varios colores, diez hojas, bulto de 50 unidades.
-        </p>
-        <p class="font-bold text-green-800 text-base">
-         Ref 0.90 C/U
-        </p>
-       </div>
-      </article>
-      <article class="bg-white rounded-md shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-       <img alt="Block lustrillo" class="w-full h-48 object-cover bg-gray-200" height="250" src="Img_productos/block_lustrillo.jpg" width="400"/>
-       <div class="p-4 text-indigo-900 flex-grow flex flex-col">
-        <h2 class="font-bold mb-2">
-         Block de papel lustrillo 10H
-        </h2>
-        <p class="text-sm mb-3 flex-grow">
-         Block de papel lustrillo de varios colores, diez hojas, bulto de 100 unidades.
-        </p>
-        <p class="font-bold text-green-800 text-base">
-         Ref 0.90 C/U
-        </p>
-       </div>
-      </article>
-     </div>
+    <nav class="bg-white text-gray-800 px-6 py-3 shadow-md sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between">
+        <div class="flex items-center space-x-6 font-bold text-lg md:text-xl tracking-wide">
+          <span class="text-2xl text-indigo-700 select-none">
+            Party Color 2011
+          </span>
+          <button
+            class="hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-1 px-2 py-1 transition duration-300 rounded-md whitespace-nowrap"
+            id="productosBtn" type="button">
+            Productos
+          </button>
+          <button
+            class="hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-1 px-2 py-1 transition duration-300 rounded-md whitespace-nowrap"
+            id="crearPedidoBtn" type="button">
+            Crear Pedido
+          </button>
+          <button
+            class="hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-1 px-2 py-1 transition duration-300 rounded-md whitespace-nowrap"
+            id="facturasBtn" type="button">
+            Facturas
+          </button>
+          <button
+            class="hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-1 px-2 py-1 transition duration-300 rounded-md whitespace-nowrap"
+            id="contactanosBtn" type="button">
+            Contáctanos
+          </button>
+        </div>
+        <div
+          class="flex items-center space-x-4 text-sm md:text-base mt-2 md:mt-0 flex-wrap justify-center md:justify-start gap-2">
+          <span class="font-semibold text-indigo-700 select-text" id="userEmailDisplay">
+          </span>
+          <button
+            class="bg-indigo-600 text-white font-semibold px-4 py-1 rounded shadow hover:bg-indigo-700 transition duration-200 whitespace-nowrap"
+            id="logoutBtn">
+            Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    </nav>
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <section id="productosSection">
+        <h1 class="text-indigo-700 font-bold text-xl md:text-2xl text-center mb-6">
+          Stock de Productos
+        </h1>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10" id="productos-container">
 
-     
-    </section>
-    <section class="hidden max-w-3xl mx-auto" id="crearPedidoSection">
-     <h1 class="text-indigo-700 font-bold text-xl md:text-2xl text-center mb-6">
-      Crear Pedido
-     </h1>
-     <form class="bg-white rounded-md shadow-md p-6 space-y-6" id="orderForm">
-      <div>
-       <label class="block font-semibold text-indigo-700 mb-1" for="rif">
-        RIF del negocio
-       </label>
-       <input class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600" id="rif" placeholder="J-12345678-9" required="" type="text"/>
+        </div>
+
+
+      </section>
+      <section class="hidden max-w-3xl mx-auto" id="crearPedidoSection">
+        <h1 class="text-indigo-700 font-bold text-xl md:text-2xl text-center mb-6">
+          Crear Pedido
+        </h1>
+        <form class="bg-white rounded-md shadow-md p-6 space-y-6" id="orderForm">
+          <div>
+            <label class="block font-semibold text-indigo-700 mb-1" for="rif">
+              RIF del negocio
+            </label>
+            <input
+              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              id="rif" placeholder="J-12345678-9" required="" type="text" />
+          </div>
+          <div>
+            <label class="block font-semibold text-indigo-700 mb-1" for="businessName">
+              Nombre del negocio
+            </label>
+            <input
+              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              id="businessName" placeholder="Nombre del negocio" required="" type="text" />
+          </div>
+          <div>
+            <h2 class="font-semibold text-indigo-700 mb-2">
+              Productos
+            </h2>
+            <div class="space-y-4 max-h-96 overflow-y-auto border border-gray-300 rounded-md p-4" id="productsList">
+            </div>
+          </div>
+          <div>
+            <h2 class="font-semibold text-indigo-700 mb-2">
+              Productos agregados
+            </h2>
+            <ul class="border border-gray-300 rounded-md p-4 min-h-[80px] text-indigo-900" id="addedProductsList">
+              <li class="text-gray-500">
+                No hay productos agregados.
+              </li>
+            </ul>
+          </div>
+          <button class="w-full bg-indigo-600 text-white font-semibold py-2 rounded hover:bg-indigo-700 transition"
+            type="submit">
+            Generar PDF del Pedido
+          </button>
+        </form>
+      </section>
+      <section class="hidden" id="facturasSection">
+        <h1 class="text-indigo-700 font-bold text-xl md:text-2xl text-center mb-6">
+          Facturas
+        </h1>
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white rounded-md shadow-md">
+            <thead>
+              <tr class="bg-indigo-700 text-white text-left">
+                <th class="py-3 px-4">
+                  RIF
+                </th>
+                <th class="py-3 px-4">
+                  Nombre del Negocio
+                </th>
+                <th class="py-3 px-4">
+                  Fecha
+                </th>
+                <th class="py-3 px-4">
+                  Productos
+                </th>
+                <th class="py-3 px-4">
+                  Total
+                </th>
+                <th class="py-3 px-4">
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody class="text-indigo-900" id="facturasTableBody">
+              <tr>
+                <td class="text-center py-4 text-gray-500" colspan="6">
+                  No hay facturas registradas.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden" id="contactCard">
+        <div class="bg-white rounded-lg shadow-lg max-w-sm w-full p-6 relative">
+          <button aria-label="Cerrar"
+            class="absolute top-3 right-3 text-gray-600 hover:text-gray-900 focus:outline-none" id="closeContactCard">
+            <i class="fas fa-times text-xl">
+            </i>
+          </button>
+          <h3 class="text-xl font-bold text-indigo-700 mb-4 text-center">
+            Contáctanos
+          </h3>
+          <div class="space-y-4 text-indigo-900">
+            <div class="flex items-center space-x-3">
+              <i class="fas fa-phone-alt text-lg">
+              </i>
+              <span class="text-lg font-semibold">
+                +58 412 945 7475
+              </span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <i class="fas fa-envelope text-lg">
+              </i>
+              <span class="text-lg font-semibold">
+                mas0167@hotmail.com
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
-       <label class="block font-semibold text-indigo-700 mb-1" for="businessName">
-        Nombre del negocio
-       </label>
-       <input class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600" id="businessName" placeholder="Nombre del negocio" required="" type="text"/>
-      </div>
-      <div>
-       <h2 class="font-semibold text-indigo-700 mb-2">
-        Productos
-       </h2>
-       <div class="space-y-4 max-h-96 overflow-y-auto border border-gray-300 rounded-md p-4" id="productsList">
-       </div>
-      </div>
-      <div>
-       <h2 class="font-semibold text-indigo-700 mb-2">
-        Productos agregados
-       </h2>
-       <ul class="border border-gray-300 rounded-md p-4 min-h-[80px] text-indigo-900" id="addedProductsList">
-        <li class="text-gray-500">
-         No hay productos agregados.
-        </li>
-       </ul>
-      </div>
-      <button class="w-full bg-indigo-600 text-white font-semibold py-2 rounded hover:bg-indigo-700 transition" type="submit">
-       Generar PDF del Pedido
-      </button>
-     </form>
-    </section>
-    <section class="hidden" id="facturasSection">
-     <h1 class="text-indigo-700 font-bold text-xl md:text-2xl text-center mb-6">
-      Facturas
-     </h1>
-     <div class="overflow-x-auto">
-      <table class="min-w-full bg-white rounded-md shadow-md">
-       <thead>
-        <tr class="bg-indigo-700 text-white text-left">
-         <th class="py-3 px-4">
-          RIF
-         </th>
-         <th class="py-3 px-4">
-          Nombre del Negocio
-         </th>
-         <th class="py-3 px-4">
-          Fecha
-         </th>
-         <th class="py-3 px-4">
-          Productos
-         </th>
-         <th class="py-3 px-4">
-          Total
-         </th>
-         <th class="py-3 px-4">
-          Acciones
-         </th>
-        </tr>
-       </thead>
-       <tbody class="text-indigo-900" id="facturasTableBody">
-        <tr>
-         <td class="text-center py-4 text-gray-500" colspan="6">
-          No hay facturas registradas.
-         </td>
-        </tr>
-       </tbody>
-      </table>
-     </div>
-    </section>
-    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden" id="contactCard">
-     <div class="bg-white rounded-lg shadow-lg max-w-sm w-full p-6 relative">
-      <button aria-label="Cerrar" class="absolute top-3 right-3 text-gray-600 hover:text-gray-900 focus:outline-none" id="closeContactCard">
-       <i class="fas fa-times text-xl">
-       </i>
-      </button>
-      <h3 class="text-xl font-bold text-indigo-700 mb-4 text-center">
-       Contáctanos
-      </h3>
-      <div class="space-y-4 text-indigo-900">
-       <div class="flex items-center space-x-3">
-        <i class="fas fa-phone-alt text-lg">
-        </i>
-        <span class="text-lg font-semibold">
-         +58 412 945 7475
-        </span>
-       </div>
-       <div class="flex items-center space-x-3">
-        <i class="fas fa-envelope text-lg">
-        </i>
-        <span class="text-lg font-semibold">
-         mas0167@hotmail.com
-        </span>
-       </div>
-      </div>
-     </div>
-    </div>
-   </main>
+    </main>
   </div>
   <script>
-   const products = [
-        {
-          id: 1,
-          name: "Alcancia grande de lata",
-          description:
-            "Alcancia  grande (23cm) de diferentes motivos surtidos en un bulto de 50 unidades.",
-          price: 75,
-          img: "Img_productos/Alcancia_grande.jpg",
-        },
-        {
-          id: 2,
-          name: "Alcancia pequena de lata",
-          description:
-            " Alcancia de lata pequena (11,5cm) de diferentes motivos en un bulto de 50 unidades.",
-          price: 50,
-          img: "Img_productos/Alcancia_peq.jpg",
-        },
-        {
-          id: 3,
-          name: "Alcancia extra grande de lata",
-          description:
-            "Alcancia de Lata extra grande (33cm) de diversos motivos en un bulto de 40 unidades.",
-          price: 120,
-          img: "Img_productos/alcancia_extragrandre.jpg",
-        },
-        {
-          id: 4,
-          name: "Ludo de caja",
-          description: "Ludo de caja de 12 unidades el paquete.",
-          price: 33.6,
-          img: "Img_productos/Ludo_caja.jpg",
-        },
-        {
-          id: 5,
-          name: "Bingo de caja",
-          description: "Bingo de caja de 50 cartones, paquete de 12 unidades",
-          price: 33.6,
-          img: "Img_productos/Bingo_caja.jpg",
-        },
-        {
-          id: 6,
-          name: "Cartulina Doble Faz",
-          description: " Cartulina doble Faz de varios colores, bulto de 50 pliegos.",
-          price: 20,
-          img: "Img_productos/Cartulina_dobleFaz.jpg",
-        },
-        {
-          id: 7,
-          name: "Cartulina Escolar",
-          description: "Cartulina escolar de diversos colores, bulto de 100 pliegos.",
-          price: 30,
-          img: "Img_productos/Cartulina_escolar.jpg",
-        },
-        {
-          id: 8,
-          name: "Papel Bond",
-          description: "Papel bond grande, Bulto de 500 pliegos.",
-          price: 70,
-          img: "Img_productos/Papel_bond.jpg",
-        },
-        {
-          id: 9,
-          name: "Monopolio de caja",
-          description: "Paquete de 12 unidades.",
-          price: 33.6,
-          img: "Img_productos/monopolio_caja.jpg",
-        },
-        {
-          id: 10,
-          name: "Ludo de sobre",
-          description: "100 unidades el bulto de ludo de sobre.",
-          price: 100,
-          img: "Img_productos/Ludo_sobre.jpg",
-        },
-        {
-          id: 11,
-          name: "Bingo de sobre",
-          description: "Bingo de sobre bodeguero, 100 unidades el bulto.",
-          price: 100,
-          img: "Img_productos/bingo_sobre.jpg",
-        },
-        {
-          id: 12,
-          name: "Rompecabezas grande",
-          description: "Rompecabezas de varios motivos grande, 96 unidades.",
-          price: 96,
-          img: "Img_productos/Rompecabezas.jpg",
-        },
-        {
-          id: 13,
-          name: "Relleno de pinata",
-          description: "relleno de pinata surtido, 12 unidades el bulto.",
-          price: 48,
-          img: "Img_productos/relleno_pinata.jpg",
-        },
-        {
-          id: 14,
-          name: "Cartulina fosforecente",
-          description: "cartulina fosforecente de varios colores, 100 pliegos el paquete.",
-          price: 100,
-          img: "Img_productos/cartulina_fosforecente.jpg",
-        },
-        {
-          id: 15,
-          name: "Block construccion 10H",
-          description: "Block construccion 10H, 50 unidades el bulto.",
-          price: 45,
-          img: "Img_productos/block_construccion.jpg",
-        },
-        {
-          id: 16,
-          name: "Block lustrillo de 10H",
-          description: "Block lustrillo de 10H, 100 unidades el bulto.",
-          price: 90,
-          img: "Img_productos/block_lustrillo.jpg",
-        },
-      ];
+    // 1. Variable global para almacenar productos
+    let productosGlobales = [];
 
-      function fetchProductosFromEndpoint() {
-        fetch("http://localhost/diplomado/backend/productos/traerProductos.php")
-          .then((response) => {
-            if (!response.ok) throw new Error("Error al obtener productos");
-            return response.json();
-          })
-          .then((data) => {
-            if (data.success && Array.isArray(data.productos)) {
-              
-              console.log("Productos obtenidos del endpoint:", data.productos);
-              
-            } else {
-              throw new Error(data.message || "Error en la respuesta de productos");
-            }
-          })
-          .catch((error) => {
-            console.error("Error al obtener productos:", error);
-          });
-      }
+    // 2. Función para obtener productos (mejorada)
+    async function fetchProductosFromEndpoint() {
+      try {
+        const response = await fetch("http://localhost/diplomado/backend/productos/traerProductos.php");
 
-      document.addEventListener("DOMContentLoaded", () => {
-        fetchProductosFromEndpoint();
-      });
-      const loginForm = document.getElementById("loginForm");
-      const registerForm = document.getElementById("registerForm");
-      const showRegisterBtn = document.getElementById("showRegister");
-      const showLoginBtn = document.getElementById("showLogin");
-      const appDiv = document.getElementById("app");
-      const mainPageDiv = document.getElementById("mainPage");
-      const userEmailDisplay = document.getElementById("userEmailDisplay");
-      const logoutBtn = document.getElementById("logoutBtn");
-
-      const toggleLoginPasswordBtn = document.getElementById("toggleLoginPassword");
-      const loginPasswordInput = document.getElementById("loginPassword");
-      const toggleRegisterPasswordBtn = document.getElementById("toggleRegisterPassword");
-      const registerPasswordInput = document.getElementById("registerPassword");
-
-      const productosBtn = document.getElementById("productosBtn");
-      const crearPedidoBtn = document.getElementById("crearPedidoBtn");
-      const facturasBtn = document.getElementById("facturasBtn");
-      const contactanosBtn = document.getElementById("contactanosBtn");
-
-      const productosSection = document.getElementById("productosSection");
-      const crearPedidoSection = document.getElementById("crearPedidoSection");
-      const facturasSection = document.getElementById("facturasSection");
-
-      const contactCard = document.getElementById("contactCard");
-      const closeContactCardBtn = document.getElementById("closeContactCard");
-
-      const orderForm = document.getElementById("orderForm");
-      const productsList = document.getElementById("productsList");
-      const addedProductsList = document.getElementById("addedProductsList");
-
-      const facturasTableBody = document.getElementById("facturasTableBody");
-
-      const addedProducts = {};
-
-      let facturas = [];
-
-      showRegisterBtn.addEventListener("click", () => {
-        loginForm.style.display = "none";
-        registerForm.style.display = "block";
-      });
-
-      showLoginBtn.addEventListener("click", () => {
-        registerForm.style.display = "none";
-        loginForm.style.display = "block";
-      });
-
-      registerForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const name = document.getElementById("registerName").value.trim();
-        const email = document.getElementById("registerEmail").value.trim().toLowerCase();
-        const password = registerPasswordInput.value;
-
-        if (!name || !email || !password) {
-          alert("Por favor, completa todos los campos.");
-          return;
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status}`);
         }
 
-        const formData = {
-          name: name,
+        const data = await response.json();
+
+        if (data.success && Array.isArray(data.productos)) {
+          // Guardar en variable global
+          productosGlobales = data.productos;
+          return data.productos;
+        } else {
+          throw new Error(data.message || "Formato de respuesta inválido");
+        }
+      } catch (error) {
+        console.error("Error al obtener productos:", error);
+        return [];
+      }
+    }
+
+    // 3. Función para mostrar productos (corregida)
+    function showProducts(products) {
+      const productsList = document.getElementById("productos-container");
+
+      if (!productsList) {
+        console.error("Elemento 'productos-container' no encontrado");
+        return;
+      }
+
+      productsList.innerHTML = "";
+
+      // Verificar si products es válido
+      if (!products || !Array.isArray(products)) {
+        console.error("Productos inválidos:", products);
+        productsList.innerHTML = '<p class="text-red-500">Error al cargar productos</p>';
+        return;
+      }
+
+      // Manejar caso sin productos
+      if (products.length === 0) {
+        productsList.innerHTML = '<p class="text-gray-500">No hay productos disponibles.</p>';
+        return;
+      }
+
+      // Corregido: usar 'producto' en lugar de 'products'
+      products.forEach(producto => {
+        const productItem = document.createElement("div");
+        productItem.innerHTML = `
+      <article class="bg-white rounded-md shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
+        <img alt="${producto.nombre}" class="w-full h-48 object-cover bg-gray-200" src="${producto.img}">
+        <div class="p-4 text-indigo-900 flex-grow flex flex-col">
+          <h2 class="font-bold mb-2">${producto.nombre}</h2>
+          <p class="text-sm mb-3 flex-grow">${producto.descripcion}</p>
+          <p class="font-bold text-green-800 text-base">${producto.precio} C/U</p>
+        </div>
+      </article>
+    `;
+        productsList.appendChild(productItem);
+      });
+    }
+
+    // 4. Inicialización
+    document.addEventListener('DOMContentLoaded', async () => {
+      const productos = await fetchProductosFromEndpoint();
+      showProducts(productos);
+    });
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const products = await fetchProductosFromEndpoint();
+      showProducts(products);
+    });
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const showRegisterBtn = document.getElementById("showRegister");
+    const showLoginBtn = document.getElementById("showLogin");
+    const appDiv = document.getElementById("app");
+    const mainPageDiv = document.getElementById("mainPage");
+    const userEmailDisplay = document.getElementById("userEmailDisplay");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const toggleLoginPasswordBtn = document.getElementById("toggleLoginPassword");
+    const loginPasswordInput = document.getElementById("loginPassword");
+    const toggleRegisterPasswordBtn = document.getElementById("toggleRegisterPassword");
+    const registerPasswordInput = document.getElementById("registerPassword");
+
+    const productosBtn = document.getElementById("productosBtn");
+    const crearPedidoBtn = document.getElementById("crearPedidoBtn");
+    const facturasBtn = document.getElementById("facturasBtn");
+    const contactanosBtn = document.getElementById("contactanosBtn");
+
+    const productosSection = document.getElementById("productosSection");
+    const crearPedidoSection = document.getElementById("crearPedidoSection");
+    const facturasSection = document.getElementById("facturasSection");
+
+    const contactCard = document.getElementById("contactCard");
+    const closeContactCardBtn = document.getElementById("closeContactCard");
+
+    const orderForm = document.getElementById("orderForm");
+    const productsList = document.getElementById("productsList");
+    const addedProductsList = document.getElementById("addedProductsList");
+
+    const facturasTableBody = document.getElementById("facturasTableBody");
+
+    const addedProducts = {};
+
+    let facturas = [];
+
+    showRegisterBtn.addEventListener("click", () => {
+      loginForm.style.display = "none";
+      registerForm.style.display = "block";
+    });
+
+    showLoginBtn.addEventListener("click", () => {
+      registerForm.style.display = "none";
+      loginForm.style.display = "block";
+    });
+
+    registerForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("registerName").value.trim();
+      const email = document.getElementById("registerEmail").value.trim().toLowerCase();
+      const password = registerPasswordInput.value;
+
+      if (!name || !email || !password) {
+        alert("Por favor, completa todos los campos.");
+        return;
+      }
+
+      const formData = {
+        name: name,
+        email: email,
+        password: password,
+      };
+
+      fetch("./backend/auth/procesarRegistro.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert("Registro exitoso. Ahora puedes iniciar sesión.");
+            registerForm.reset();
+            registerForm.style.display = "none";
+            loginForm.style.display = "block";
+          } else {
+            alert(data.message || "Error en el registro");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("Error al conectar con el servidor");
+        });
+    });
+
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+      const password = loginPasswordInput.value;
+
+      if (!email || !password) {
+        alert("Por favor, completa todos los campos.");
+        return;
+      }
+
+      fetch("./backend/auth/procesarLogin.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           email: email,
           password: password,
-        };
-
-        fetch("./backend/auth/procesarRegistro.php", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
+        }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+          }
+          const contentType = response.headers.get("content-type");
+          if (!contentType || !contentType.includes("application/json")) {
+            throw new TypeError("La respuesta no es JSON");
+          }
+          return response.json();
         })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.success) {
-              alert("Registro exitoso. Ahora puedes iniciar sesión.");
-              registerForm.reset();
-              registerForm.style.display = "none";
-              loginForm.style.display = "block";
-            } else {
-              alert(data.message || "Error en el registro");
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            alert("Error al conectar con el servidor");
-          });
-      });
-
-      loginForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const email = document.getElementById("loginEmail").value.trim().toLowerCase();
-        const password = loginPasswordInput.value;
-
-        if (!email || !password) {
-          alert("Por favor, completa todos los campos.");
-          return;
-        }
-
-        fetch("./backend/auth/procesarLogin.php", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: email,
-            password: password,
-          }),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`Error HTTP: ${response.status}`);
-            }
-            const contentType = response.headers.get("content-type");
-            if (!contentType || !contentType.includes("application/json")) {
-              throw new TypeError("La respuesta no es JSON");
-            }
-            return response.json();
-          })
-          .then((data) => {
-            if (data.success) {
-              appDiv.style.display = "none";
-              mainPageDiv.classList.remove("hidden");
-
-              localStorage.setItem(
-                "user",
-                JSON.stringify({
-                  id: data.user.id,
-                  email: data.user.email,
-                  name: data.user.name,
-                })
-              );
-              checkAuthState();
-
-              userEmailDisplay.textContent = data.user.email;
-
-              showSection("productos");
-            } else {
-              alert(data.message || "Error en el login");
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            alert("Error al conectar con el servidor");
-          });
-      });
-
-      logoutBtn.addEventListener("click", () => {
-        localStorage.removeItem("user");
-        mainPageDiv.classList.add("hidden");
-        appDiv.style.display = "flex";
-        loginForm.reset();
-        showLoginForm();
-      });
-
-      document.addEventListener("DOMContentLoaded", () => {
-        checkAuthState();
-      });
-
-      function checkAuthState() {
-        try {
-          const userData = JSON.parse(localStorage.getItem("user"));
-
-          if (userData?.id && userData?.email) {
+        .then((data) => {
+          if (data.success) {
             appDiv.style.display = "none";
             mainPageDiv.classList.remove("hidden");
-            userEmailDisplay.textContent = userData.email;
+
+            localStorage.setItem(
+              "user",
+              JSON.stringify({
+                id: data.user.id,
+                email: data.user.email,
+                name: data.user.name,
+              })
+            );
+            checkAuthState();
+
+            userEmailDisplay.textContent = data.user.email;
+
             showSection("productos");
-            fetchFacturasFromDB();
           } else {
-            mainPageDiv.classList.add("hidden");
-            appDiv.style.display = "flex";
+            alert(data.message || "Error en el login");
           }
-        } catch (error) {
-          console.error("Error checking auth:", error);
-          localStorage.removeItem("user");
-        }
-      }
-
-      function togglePasswordVisibility(input, button) {
-        if (input.type === "password") {
-          input.type = "text";
-          button.innerHTML = '<i class="fas fa-eye-slash"></i>';
-        } else {
-          input.type = "password";
-          button.innerHTML = '<i class="fas fa-eye"></i>';
-        }
-      }
-
-      toggleLoginPasswordBtn.addEventListener("click", () => {
-        togglePasswordVisibility(loginPasswordInput, toggleLoginPasswordBtn);
-      });
-      toggleRegisterPasswordBtn.addEventListener("click", () => {
-        togglePasswordVisibility(registerPasswordInput, toggleRegisterPasswordBtn);
-      });
-
-      contactanosBtn.addEventListener("click", () => {
-        contactCard.classList.remove("hidden");
-      });
-
-      closeContactCardBtn.addEventListener("click", () => {
-        contactCard.classList.add("hidden");
-      });
-
-      contactCard.addEventListener("click", (e) => {
-        if (e.target === contactCard) {
-          contactCard.classList.add("hidden");
-        }
-      });
-
-      productosBtn.addEventListener("click", () => showSection("productos"));
-      crearPedidoBtn.addEventListener("click", () => {
-        showSection("crearPedido");
-        renderProductsList();
-        renderAddedProducts();
-      });
-      facturasBtn.addEventListener("click", () => {
-        showSection("facturas");
-        fetchFacturasFromDB();
-      });
-
-      function showSection(section) {
-        productosSection.classList.add("hidden");
-        crearPedidoSection.classList.add("hidden");
-        facturasSection.classList.add("hidden");
-        if (section === "productos") productosSection.classList.remove("hidden");
-        else if (section === "crearPedido") crearPedidoSection.classList.remove("hidden");
-        else if (section === "facturas") facturasSection.classList.remove("hidden");
-        contactCard.classList.add("hidden");
-      }
-
-      function renderProductsList() {
-        productsList.innerHTML = "";
-        products.forEach((product) => {
-          const productDiv = document.createElement("div");
-          productDiv.className = "flex items-center space-x-4 border-b border-gray-200 pb-3";
-
-          const img = document.createElement("img");
-          img.src = product.img;
-          img.alt = product.name + ", imagen del producto";
-          img.className = "w-16 h-16 object-cover rounded";
-          img.width = 64;
-          img.height = 64;
-
-          const infoDiv = document.createElement("div");
-          infoDiv.className = "flex-grow";
-
-          const nameP = document.createElement("p");
-          nameP.className = "font-semibold text-indigo-900";
-          nameP.textContent = product.name;
-
-          const priceP = document.createElement("p");
-          priceP.className = "text-green-800 font-bold";
-          priceP.textContent = `$${product.price.toFixed(2)}`;
-
-          infoDiv.appendChild(nameP);
-          infoDiv.appendChild(priceP);
-
-          const qtyDiv = document.createElement("div");
-          qtyDiv.className = "flex items-center space-x-2";
-
-          const qtyInput = document.createElement("input");
-          qtyInput.type = "number";
-          qtyInput.min = "0";
-          qtyInput.value = "0";
-          qtyInput.id = `qty-${product.id}`;
-          qtyInput.className =
-            "w-16 border border-gray-300 rounded px-2 py-1 text-center focus:outline-none focus:ring-2 focus:ring-indigo-600";
-
-          const addButton = document.createElement("button");
-          addButton.type = "button";
-          addButton.textContent = "Agregar";
-          addButton.className =
-            "bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 transition text-sm font-semibold";
-          addButton.title = `Agregar ${product.name} al pedido`;
-
-          addButton.addEventListener("click", () => {
-            const qty = parseInt(qtyInput.value, 10);
-            if (isNaN(qty) || qty <= 0) {
-              alert("Por favor, ingresa una cantidad válida mayor a cero.");
-              return;
-            }
-            addProductToOrder(product, qty);
-            qtyInput.value = "0";
-          });
-
-          qtyDiv.appendChild(qtyInput);
-          qtyDiv.appendChild(addButton);
-
-          productDiv.appendChild(img);
-          productDiv.appendChild(infoDiv);
-          productDiv.appendChild(qtyDiv);
-
-          productsList.appendChild(productDiv);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("Error al conectar con el servidor");
         });
-      }
+    });
 
-      function addProductToOrder(product, quantity) {
-        if (addedProducts[product.id]) {
-          addedProducts[product.id].quantity += quantity;
-        } else {
-          addedProducts[product.id] = {
-            name: product.name,
-            price: product.price,
-            quantity: quantity,
-          };
-        }
-        renderAddedProducts();
-      }
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("user");
+      mainPageDiv.classList.add("hidden");
+      appDiv.style.display = "flex";
+      loginForm.reset();
+      showLoginForm();
+    });
 
-      function renderAddedProducts() {
-        addedProductsList.innerHTML = "";
-        const keys = Object.keys(addedProducts);
-        if (keys.length === 0) {
-          addedProductsList.innerHTML =
-            '<li class="text-gray-500">No hay productos agregados.</li>';
-          return;
-        }
-        keys.forEach((key) => {
-          const item = addedProducts[key];
-          const li = document.createElement("li");
-          li.className = "flex justify-between border-b border-gray-200 py-1 items-center";
+    document.addEventListener("DOMContentLoaded", () => {
+      checkAuthState();
+    });
 
-          const textSpan = document.createElement("span");
-          textSpan.textContent = `${item.name} - Cantidad: ${item.quantity}`;
-
-          const btnGroup = document.createElement("div");
-          btnGroup.className = "space-x-2";
-
-          const editBtn = document.createElement("button");
-          editBtn.className = "text-blue-600 hover:text-blue-800 focus:outline-none";
-          editBtn.title = "Editar cantidad";
-          editBtn.innerHTML = '<i class="fas fa-edit"></i>';
-          editBtn.addEventListener("click", () => {
-            const newQty = prompt(`Editar cantidad para ${item.name}:`, item.quantity);
-            if (newQty === null) return; // Cancelado
-            const qtyNum = parseInt(newQty, 10);
-            if (isNaN(qtyNum) || qtyNum <= 0) {
-              alert("Por favor, ingresa una cantidad válida mayor a cero.");
-              return;
-            }
-            addedProducts[key].quantity = qtyNum;
-            renderAddedProducts();
-          });
-
-          const deleteBtn = document.createElement("button");
-          deleteBtn.className = "text-red-600 hover:text-red-800 focus:outline-none";
-          deleteBtn.title = "Eliminar producto";
-          deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
-          deleteBtn.addEventListener("click", () => {
-            if (confirm(`¿Eliminar ${item.name} del pedido?`)) {
-              delete addedProducts[key];
-              renderAddedProducts();
-            }
-          });
-
-          btnGroup.appendChild(editBtn);
-          btnGroup.appendChild(deleteBtn);
-
-          li.appendChild(textSpan);
-          li.appendChild(btnGroup);
-
-          addedProductsList.appendChild(li);
-        });
-      }
-
-      function clearAddedProducts() {
-        for (const key in addedProducts) {
-          if (Object.hasOwnProperty.call(addedProducts, key)) {
-            delete addedProducts[key];
-          }
-        }
-        renderAddedProducts();
-      }
-
-      function fetchFacturasFromDB() {
+    function checkAuthState() {
+      try {
         const userData = JSON.parse(localStorage.getItem("user"));
 
-        if (!userData?.id) {
-          alert("Usuario no autenticado");
-          return;
+        if (userData?.id && userData?.email) {
+          appDiv.style.display = "none";
+          mainPageDiv.classList.remove("hidden");
+          userEmailDisplay.textContent = userData.email;
+          showSection("productos");
+          fetchFacturasFromDB();
+        } else {
+          mainPageDiv.classList.add("hidden");
+          appDiv.style.display = "flex";
         }
+      } catch (error) {
+        console.error("Error checking auth:", error);
+        localStorage.removeItem("user");
+      }
+    }
 
-        fetch(`./backend/factura/traerFacturas.php?user_id=${userData.id}`)
-          .then((response) => {
-            if (!response.ok) throw new Error("Error al obtener facturas");
-            return response.json();
-          })
-          .then((data) => {
-            if (data.success) {
-              facturas = data.facturas;
-              renderFacturasTable(facturas);
-            } else {
-              throw new Error(data.message || "Error al cargar facturas");
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            alert(error.message);
-          });
+    function togglePasswordVisibility(input, button) {
+      if (input.type === "password") {
+        input.type = "text";
+        button.innerHTML = '<i class="fas fa-eye-slash"></i>';
+      } else {
+        input.type = "password";
+        button.innerHTML = '<i class="fas fa-eye"></i>';
+      }
+    }
+
+    toggleLoginPasswordBtn.addEventListener("click", () => {
+      togglePasswordVisibility(loginPasswordInput, toggleLoginPasswordBtn);
+    });
+    toggleRegisterPasswordBtn.addEventListener("click", () => {
+      togglePasswordVisibility(registerPasswordInput, toggleRegisterPasswordBtn);
+    });
+
+    contactanosBtn.addEventListener("click", () => {
+      contactCard.classList.remove("hidden");
+    });
+
+    closeContactCardBtn.addEventListener("click", () => {
+      contactCard.classList.add("hidden");
+    });
+
+    contactCard.addEventListener("click", (e) => {
+      if (e.target === contactCard) {
+        contactCard.classList.add("hidden");
+      }
+    });
+
+    productosBtn.addEventListener("click", () => showSection("productos"));
+    crearPedidoBtn.addEventListener("click", async () => {
+      const productos = await fetchProductosFromEndpoint();
+      showSection("crearPedido");
+      renderProductsList(productos);
+      renderAddedProducts();
+    });
+    facturasBtn.addEventListener("click", () => {
+      showSection("facturas");
+      fetchFacturasFromDB();
+    });
+
+    function showSection(section) {
+      productosSection.classList.add("hidden");
+      crearPedidoSection.classList.add("hidden");
+      facturasSection.classList.add("hidden");
+      if (section === "productos") productosSection.classList.remove("hidden");
+      else if (section === "crearPedido") crearPedidoSection.classList.remove("hidden");
+      else if (section === "facturas") facturasSection.classList.remove("hidden");
+      contactCard.classList.add("hidden");
+    }
+
+    function renderProductsList(products) {
+      console.log("Rendering products list:", products);
+      productsList.innerHTML = "";
+      products.forEach((product) => {
+        const productDiv = document.createElement("div");
+        productDiv.className = "flex items-center space-x-4 border-b border-gray-200 pb-3";
+
+        const img = document.createElement("img");
+        img.src = product.img;
+        img.alt = product.nombre + ", imagen del producto";
+        img.className = "w-16 h-16 object-cover rounded";
+        img.width = 64;
+        img.height = 64;
+
+        const infoDiv = document.createElement("div");
+        infoDiv.className = "flex-grow";
+
+        const nameP = document.createElement("p");
+        nameP.className = "font-semibold text-indigo-900";
+        nameP.textContent = product.nombre;
+
+        const priceP = document.createElement("p");
+        priceP.className = "text-green-800 font-bold";
+        priceP.textContent = `$${product.precio}`;
+
+        infoDiv.appendChild(nameP);
+        infoDiv.appendChild(priceP);
+
+        const qtyDiv = document.createElement("div");
+        qtyDiv.className = "flex items-center space-x-2";
+
+        const qtyInput = document.createElement("input");
+        qtyInput.type = "number";
+        qtyInput.min = "0";
+        qtyInput.value = "0";
+        qtyInput.id = `qty-${product.id}`;
+        qtyInput.className =
+          "w-16 border border-gray-300 rounded px-2 py-1 text-center focus:outline-none focus:ring-2 focus:ring-indigo-600";
+
+        const addButton = document.createElement("button");
+        addButton.type = "button";
+        addButton.textContent = "Agregar";
+        addButton.className =
+          "bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 transition text-sm font-semibold";
+        addButton.title = `Agregar ${product.nombre} al pedido`;
+
+        addButton.addEventListener("click", () => {
+          const qty = parseInt(qtyInput.value, 10);
+          if (isNaN(qty) || qty <= 0) {
+            alert("Por favor, ingresa una cantidad válida mayor a cero.");
+            return;
+          }
+          addProductToOrder(product, qty);
+          qtyInput.value = "0";
+        });
+
+        qtyDiv.appendChild(qtyInput);
+        qtyDiv.appendChild(addButton);
+
+        productDiv.appendChild(img);
+        productDiv.appendChild(infoDiv);
+        productDiv.appendChild(qtyDiv);
+
+        productsList.appendChild(productDiv);
+      });
+    }
+
+    function addProductToOrder(product, quantity) {
+      console.log("Adding product to order:", product, quantity);
+      if (addedProducts[product.id]) {
+        addedProducts[product.id].quantity += quantity;
+      } else {
+        addedProducts[product.id] = {
+          name: product.nombre,
+          price: product.precio,
+          quantity: quantity,
+        };
+      }
+      renderAddedProducts();
+    }
+
+    function renderAddedProducts() {
+      addedProductsList.innerHTML = "";
+      const keys = Object.keys(addedProducts);
+      if (keys.length === 0) {
+        addedProductsList.innerHTML =
+          '<li class="text-gray-500">No hay productos agregados.</li>';
+        return;
+      }
+      keys.forEach((key) => {
+        console.log("Rendering added product:", key, addedProducts[key]);
+        const item = addedProducts[key];
+        const li = document.createElement("li");
+        li.className = "flex justify-between border-b border-gray-200 py-1 items-center";
+
+        const textSpan = document.createElement("span");
+        textSpan.textContent = `${item.name} - Cantidad: ${item.quantity}`;
+
+        const btnGroup = document.createElement("div");
+        btnGroup.className = "space-x-2";
+
+        const editBtn = document.createElement("button");
+        editBtn.className = "text-blue-600 hover:text-blue-800 focus:outline-none";
+        editBtn.title = "Editar cantidad";
+        editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+        editBtn.addEventListener("click", () => {
+          const newQty = prompt(`Editar cantidad para ${item.name}:`, item.quantity);
+          if (newQty === null) return; // Cancelado
+          const qtyNum = parseInt(newQty, 10);
+          if (isNaN(qtyNum) || qtyNum <= 0) {
+            alert("Por favor, ingresa una cantidad válida mayor a cero.");
+            return;
+          }
+          addedProducts[key].quantity = qtyNum;
+          renderAddedProducts();
+        });
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "text-red-600 hover:text-red-800 focus:outline-none";
+        deleteBtn.title = "Eliminar producto";
+        deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+        deleteBtn.addEventListener("click", () => {
+          if (confirm(`¿Eliminar ${item.name} del pedido?`)) {
+            delete addedProducts[key];
+            renderAddedProducts();
+          }
+        });
+
+        btnGroup.appendChild(editBtn);
+        btnGroup.appendChild(deleteBtn);
+
+        li.appendChild(textSpan);
+        li.appendChild(btnGroup);
+
+        addedProductsList.appendChild(li);
+      });
+    }
+
+    function clearAddedProducts() {
+      for (const key in addedProducts) {
+        if (Object.hasOwnProperty.call(addedProducts, key)) {
+          delete addedProducts[key];
+        }
+      }
+      renderAddedProducts();
+    }
+
+    function fetchFacturasFromDB() {
+      const userData = JSON.parse(localStorage.getItem("user"));
+
+      if (!userData?.id) {
+        alert("Usuario no autenticado");
+        return;
       }
 
-      function renderFacturasTable(facturasData = []) {
-        facturasTableBody.innerHTML = "";
+      fetch(`./backend/factura/traerFacturas.php?user_id=${userData.id}`)
+        .then((response) => {
+          if (!response.ok) throw new Error("Error al obtener facturas");
+          return response.json();
+        })
+        .then((data) => {
+          if (data.success) {
+            facturas = data.facturas;
+            renderFacturasTable(facturas);
+          } else {
+            throw new Error(data.message || "Error al cargar facturas");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert(error.message);
+        });
+    }
 
-        if (facturasData.length === 0) {
-          facturasTableBody.innerHTML = `
+    function renderFacturasTable(facturasData = []) {
+      facturasTableBody.innerHTML = "";
+
+      if (facturasData.length === 0) {
+        facturasTableBody.innerHTML = `
               <tr>
                   <td colspan="6" class="text-center py-4 text-gray-500">
                       No hay facturas registradas
                   </td>
               </tr>
           `;
-          return;
-        }
-
-        facturasData.forEach((factura, index) => {
-          const tr = document.createElement("tr");
-          tr.className = "border-b border-gray-200";
-
-          const tdRif = document.createElement("td");
-          tdRif.className = "py-3 px-4";
-          tdRif.textContent = factura.rif;
-
-          const tdName = document.createElement("td");
-          tdName.className = "py-3 px-4";
-          tdName.textContent = factura.business_name;
-
-          const tdDate = document.createElement("td");
-          tdDate.className = "py-3 px-4";
-          const fecha = new Date(factura.date);
-          tdDate.textContent = `${fecha.toLocaleDateString()} ${fecha.toLocaleTimeString()}`;
-
-          const tdProducts = document.createElement("td");
-          tdProducts.className = "py-3 px-4 max-w-xs";
-          tdProducts.style.whiteSpace = "pre-wrap";
-          const productos = JSON.parse(factura.products);
-          tdProducts.textContent = productos
-            .map(
-              (p) =>
-                `${p.name} x${p.quantity} ($${parseFloat(p.price).toFixed(2)})`
-            )
-            .join("\n");
-
-          const tdTotal = document.createElement("td");
-          tdTotal.className = "py-3 px-4 font-bold text-green-800";
-          tdTotal.textContent = `$${parseFloat(factura.total).toFixed(2)}`;
-
-          const tdActions = document.createElement("td");
-          tdActions.className = "py-3 px-4 space-x-2";
-
-          const downloadBtn = document.createElement("button");
-          downloadBtn.className =
-            "bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 transition text-sm font-semibold";
-          downloadBtn.textContent = "Descargar PDF";
-          downloadBtn.addEventListener("click", () => {
-            generarPDF({
-              rif: factura.rif,
-              business_name: factura.business_name,
-              date: factura.date,
-              total: factura.total,
-              products: productos,
-            });
-          });
-
-          const editBtn = document.createElement("button");
-          editBtn.className =
-            "bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition text-sm font-semibold";
-          editBtn.textContent = "Editar";
-          editBtn.addEventListener("click", () => {
-            editarFactura(index);
-          });
-
-          const deleteBtn = document.createElement("button");
-          deleteBtn.className =
-            "bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition text-sm font-semibold";
-          deleteBtn.textContent = "Eliminar";
-          deleteBtn.addEventListener("click", () => {
-            eliminarFactura(index);
-          });
-
-          tdActions.appendChild(downloadBtn);
-          tdActions.appendChild(editBtn);
-          tdActions.appendChild(deleteBtn);
-
-          tr.appendChild(tdRif);
-          tr.appendChild(tdName);
-          tr.appendChild(tdDate);
-          tr.appendChild(tdProducts);
-          tr.appendChild(tdTotal);
-          tr.appendChild(tdActions);
-
-          facturasTableBody.appendChild(tr);
-        });
+        return;
       }
 
-      function editarFactura(index) {
-        const factura = facturas[index];
-        if (!factura) {
-          alert("Factura no encontrada");
-          return;
-        }
+      facturasData.forEach((factura, index) => {
+        const tr = document.createElement("tr");
+        tr.className = "border-b border-gray-200";
 
-        showSection("crearPedido");
+        const tdRif = document.createElement("td");
+        tdRif.className = "py-3 px-4";
+        tdRif.textContent = factura.rif;
 
-        document.getElementById("rif").value = factura.rif;
-        document.getElementById("businessName").value = factura.business_name;
+        const tdName = document.createElement("td");
+        tdName.className = "py-3 px-4";
+        tdName.textContent = factura.business_name;
 
-        clearAddedProducts();
+        const tdDate = document.createElement("td");
+        tdDate.className = "py-3 px-4";
+        const fecha = new Date(factura.date);
+        tdDate.textContent = `${fecha.toLocaleDateString()} ${fecha.toLocaleTimeString()}`;
 
+        const tdProducts = document.createElement("td");
+        tdProducts.className = "py-3 px-4 max-w-xs";
+        tdProducts.style.whiteSpace = "pre-wrap";
         const productos = JSON.parse(factura.products);
-        productos.forEach((p) => {
-          const prod = products.find((pr) => pr.name === p.name);
-          if (prod) {
-            addedProducts[prod.id] = {
-              name: prod.name,
-              price: prod.price,
-              quantity: p.quantity,
-            };
-          }
+        tdProducts.textContent = productos
+          .map(
+            (p) =>
+              `${p.name} x${p.quantity} ($${parseFloat(p.price).toFixed(2)})`
+          )
+          .join("\n");
+
+        const tdTotal = document.createElement("td");
+        tdTotal.className = "py-3 px-4 font-bold text-green-800";
+        tdTotal.textContent = `$${parseFloat(factura.total).toFixed(2)}`;
+
+        const tdActions = document.createElement("td");
+        tdActions.className = "py-3 px-4 space-x-2";
+
+        const downloadBtn = document.createElement("button");
+        downloadBtn.className =
+          "bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 transition text-sm font-semibold";
+        downloadBtn.textContent = "Descargar PDF";
+        downloadBtn.addEventListener("click", () => {
+          generarPDF({
+            rif: factura.rif,
+            business_name: factura.business_name,
+            date: factura.date,
+            total: factura.total,
+            products: productos,
+          });
         });
-        renderAddedProducts();
 
-        orderForm.removeEventListener("submit", crearPedidoSubmitHandler);
-        orderForm.addEventListener(
-          "submit",
-          function actualizarFacturaSubmitHandler(e) {
-            e.preventDefault();
+        const editBtn = document.createElement("button");
+        editBtn.className =
+          "bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition text-sm font-semibold";
+        editBtn.textContent = "Editar";
+        editBtn.addEventListener("click", () => {
+          editarFactura(index);
+        });
 
-            const rif = document.getElementById("rif").value.trim();
-            const businessName = document.getElementById("businessName").value.trim();
-            const userData = JSON.parse(localStorage.getItem("user"));
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className =
+          "bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition text-sm font-semibold";
+        deleteBtn.textContent = "Eliminar";
+        deleteBtn.addEventListener("click", () => {
+          eliminarFactura(index);
+        });
 
-            if (!userData?.id) {
-              alert("Usuario no autenticado");
-              return;
-            }
-            if (!rif || !businessName) {
-              alert("Por favor, ingresa el RIF y el nombre del negocio.");
-              return;
-            }
+        tdActions.appendChild(downloadBtn);
+        tdActions.appendChild(editBtn);
+        tdActions.appendChild(deleteBtn);
 
-            const selectedProducts = Object.values(addedProducts).filter(
-              (p) => p.quantity > 0
-            );
-            if (selectedProducts.length === 0) {
-              alert("Por favor, agrega al menos un producto al pedido.");
-              return;
-            }
+        tr.appendChild(tdRif);
+        tr.appendChild(tdName);
+        tr.appendChild(tdDate);
+        tr.appendChild(tdProducts);
+        tr.appendChild(tdTotal);
+        tr.appendChild(tdActions);
 
-            const total = selectedProducts.reduce(
-              (acc, p) => acc + p.price * p.quantity,
-              0
-            );
-            const now = new Date();
-            const dateStr = now.toISOString();
+        facturasTableBody.appendChild(tr);
+      });
+    }
 
-            const facturaData = {
-              id: factura.id,
-              user_id: userData.id,
-              rif,
+    function editarFactura(index) {
+      const factura = facturas[index];
+      if (!factura) {
+        alert("Factura no encontrada");
+        return;
+      }
+
+      showSection("crearPedido");
+
+      document.getElementById("rif").value = factura.rif;
+      document.getElementById("businessName").value = factura.business_name;
+
+      clearAddedProducts();
+
+      const productos = JSON.parse(factura.products);
+      productos.forEach((p) => {
+        const prod = products.find((pr) => pr.name === p.name);
+        if (prod) {
+          addedProducts[prod.id] = {
+            name: prod.name,
+            price: prod.price,
+            quantity: p.quantity,
+          };
+        }
+      });
+      renderAddedProducts();
+
+      orderForm.removeEventListener("submit", crearPedidoSubmitHandler);
+      orderForm.addEventListener(
+        "submit",
+        function actualizarFacturaSubmitHandler(e) {
+          e.preventDefault();
+
+          const rif = document.getElementById("rif").value.trim();
+          const businessName = document.getElementById("businessName").value.trim();
+          const userData = JSON.parse(localStorage.getItem("user"));
+
+          if (!userData?.id) {
+            alert("Usuario no autenticado");
+            return;
+          }
+          if (!rif || !businessName) {
+            alert("Por favor, ingresa el RIF y el nombre del negocio.");
+            return;
+          }
+
+          const selectedProducts = Object.values(addedProducts).filter(
+            (p) => p.quantity > 0
+          );
+          if (selectedProducts.length === 0) {
+            alert("Por favor, agrega al menos un producto al pedido.");
+            return;
+          }
+
+          const total = selectedProducts.reduce(
+            (acc, p) => acc + p.price * p.quantity,
+            0
+          );
+          const now = new Date();
+          const dateStr = now.toISOString();
+
+          const facturaData = {
+            id: factura.id,
+            user_id: userData.id,
+            rif,
+            business_name: businessName,
+            date: dateStr,
+            total,
+            products: selectedProducts.map((p) => ({
+              name: p.name,
+              quantity: p.quantity,
+              price: p.price,
+            })),
+          };
+          fetch("./backend/factura/actualizarFactura.php", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(facturaData),
+          })
+            .then((response) => {
+              if (!response.ok)
+                throw new Error("Error en la respuesta del servidor");
+              return response.json();
+            })
+            .then((data) => {
+              if (data.success) {
+                alert("Factura actualizada exitosamente");
+                orderForm.reset();
+                clearAddedProducts();
+                fetchFacturasFromDB();
+                showSection("facturas");
+                orderForm.removeEventListener(
+                  "submit",
+                  actualizarFacturaSubmitHandler
+                );
+                orderForm.addEventListener("submit", crearPedidoSubmitHandler);
+              } else {
+                throw new Error(data.message || "Error al actualizar la factura");
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert(error.message);
+            });
+        },
+        { once: true }
+      );
+    }
+
+    function eliminarFactura(index) {
+      const factura = facturas[index];
+      if (!factura) {
+        alert("Factura no encontrada");
+        return;
+      }
+      if (!confirm(`¿Estás seguro de eliminar la factura de ${factura.business_name}?`)) {
+        return;
+      }
+
+      fetch(`./backend/factura/eliminarFactura.php?id=${factura.id}`, {
+        method: "POST",
+      })
+        .then((response) => {
+          if (!response.ok) throw new Error("Error al eliminar factura");
+          return response.json();
+        })
+        .then((data) => {
+          if (data.success) {
+            alert("Factura eliminada exitosamente");
+            fetchFacturasFromDB();
+          } else {
+            throw new Error(data.message || "Error al eliminar la factura");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert(error.message);
+        });
+    }
+
+    function crearPedidoSubmitHandler(e) {
+      e.preventDefault();
+      const rif = document.getElementById("rif").value.trim();
+      const businessName = document.getElementById("businessName").value.trim();
+      const userData = JSON.parse(localStorage.getItem("user"));
+
+      if (!userData?.id) {
+        alert("Usuario no autenticado");
+        return;
+      }
+      if (!rif || !businessName) {
+        alert("Por favor, ingresa el RIF y el nombre del negocio.");
+        return;
+      }
+
+      const selectedProducts = Object.values(addedProducts).filter(
+        (p) => p.quantity > 0
+      );
+      if (selectedProducts.length === 0) {
+        alert("Por favor, agrega al menos un producto al pedido.");
+        return;
+      }
+
+      console.log("Calculando total:", selectedProducts);
+      const total = selectedProducts.reduce(
+        (acc, p) => {
+          // Convertir precios de formato "12.345,00" a número
+          const precioNumerico = parseFloat(
+            p.price.replace(/\./g, '').replace(',', '.')
+          );
+          return acc + precioNumerico * p.quantity;
+        },
+        0
+      );
+      const now = new Date();
+      const dateStr = now.toISOString();
+
+      const facturaData = {
+        user_id: userData.id,
+        rif,
+        business_name: businessName,
+        date: dateStr,
+        total: total.toFixed(2),
+        products: selectedProducts.map((p) => ({
+          name: p.name,
+          quantity: p.quantity,
+          price: p.price,
+        })),
+      };
+      console.log("Factura data:", facturaData);
+      fetch("./backend/factura/procesarFactura.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(facturaData),
+      })
+        .then((response) => {
+          if (!response.ok) throw new Error("Error en la respuesta del servidor");
+          return response.json();
+        })
+        .then((data) => {
+          if (data.success) {
+            generarPDF({
+              rif: rif,
               business_name: businessName,
               date: dateStr,
-              total,
-              products: selectedProducts.map((p) => ({
-                name: p.name,
-                quantity: p.quantity,
-                price: p.price,
-              })),
-            };
-
-            fetch("./backend/factura/actualizarFactura.php", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(facturaData),
-            })
-              .then((response) => {
-                if (!response.ok)
-                  throw new Error("Error en la respuesta del servidor");
-                return response.json();
-              })
-              .then((data) => {
-                if (data.success) {
-                  alert("Factura actualizada exitosamente");
-                  orderForm.reset();
-                  clearAddedProducts();
-                  fetchFacturasFromDB();
-                  showSection("facturas");
-                  orderForm.removeEventListener(
-                    "submit",
-                    actualizarFacturaSubmitHandler
-                  );
-                  orderForm.addEventListener("submit", crearPedidoSubmitHandler);
-                } else {
-                  throw new Error(data.message || "Error al actualizar la factura");
-                }
-              })
-              .catch((error) => {
-                console.error("Error:", error);
-                alert(error.message);
-              });
-          },
-          { once: true }
-        );
-      }
-
-      function eliminarFactura(index) {
-        const factura = facturas[index];
-        if (!factura) {
-          alert("Factura no encontrada");
-          return;
-        }
-        if (!confirm(`¿Estás seguro de eliminar la factura de ${factura.business_name}?`)) {
-          return;
-        }
-
-        fetch(`./backend/factura/eliminarFactura.php?id=${factura.id}`, {
-          method: "POST",
-        })
-          .then((response) => {
-            if (!response.ok) throw new Error("Error al eliminar factura");
-            return response.json();
-          })
-          .then((data) => {
-            if (data.success) {
-              alert("Factura eliminada exitosamente");
-              fetchFacturasFromDB();
-            } else {
-              throw new Error(data.message || "Error al eliminar la factura");
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            alert(error.message);
-          });
-      }
-
-      function crearPedidoSubmitHandler(e) {
-        e.preventDefault();
-        const rif = document.getElementById("rif").value.trim();
-        const businessName = document.getElementById("businessName").value.trim();
-        const userData = JSON.parse(localStorage.getItem("user"));
-
-        if (!userData?.id) {
-          alert("Usuario no autenticado");
-          return;
-        }
-        if (!rif || !businessName) {
-          alert("Por favor, ingresa el RIF y el nombre del negocio.");
-          return;
-        }
-
-        const selectedProducts = Object.values(addedProducts).filter(
-          (p) => p.quantity > 0
-        );
-        if (selectedProducts.length === 0) {
-          alert("Por favor, agrega al menos un producto al pedido.");
-          return;
-        }
-
-        const total = selectedProducts.reduce(
-          (acc, p) => acc + p.price * p.quantity,
-          0
-        );
-        const now = new Date();
-        const dateStr = now.toISOString();
-
-        const facturaData = {
-          user_id: userData.id,
-          rif,
-          business_name: businessName,
-          date: dateStr,
-          total,
-          products: selectedProducts.map((p) => ({
-            name: p.name,
-            quantity: p.quantity,
-            price: p.price,
-          })),
-        };
-
-        fetch("./backend/factura/procesarFactura.php", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(facturaData),
-        })
-          .then((response) => {
-            if (!response.ok) throw new Error("Error en la respuesta del servidor");
-            return response.json();
-          })
-          .then((data) => {
-            if (data.success) {
-              generarPDF({
-                rif: rif,
-                business_name: businessName,
-                date: dateStr,
-                total: total,
-                products: selectedProducts,
-              });
-              alert("Pedido registrado exitosamente");
-              orderForm.reset();
-              clearAddedProducts();
-              fetchFacturasFromDB();
-              showSection("facturas");
-            } else {
-              throw new Error(data.message || "Error al guardar el pedido");
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            alert(error.message);
-          });
-      }
-
-      orderForm.addEventListener("submit", crearPedidoSubmitHandler);
-
-      function generarPDF(factura) {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-
-        const marginLeft = 15;
-        let y = 20;
-
-        const fecha = new Date(factura.date);
-        const dateStr =
-          fecha.toLocaleDateString("es-ES") +
-          " " +
-          fecha.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
-
-        doc.setFontSize(16);
-        doc.setTextColor("#4f46e5"); // Indigo-600
-        doc.text("Pedido - Party Color 2011", marginLeft, y);
-        y += 10;
-
-        doc.setFontSize(12);
-        doc.setTextColor("#000000");
-        doc.text(`RIF: ${factura.rif}`, marginLeft, y);
-        y += 7;
-        doc.text(`Nombre del negocio: ${factura.business_name}`, marginLeft, y);
-        y += 7;
-        doc.text(`Fecha: ${dateStr}`, marginLeft, y);
-        y += 10;
-
-        doc.setFont(undefined, "bold");
-        doc.text("Producto", marginLeft, y);
-        doc.text("Cantidad", marginLeft + 90, y);
-        doc.text("Precio Unitario", marginLeft + 120, y);
-        doc.text("Total", marginLeft + 160, y);
-        doc.setFont(undefined, "normal");
-        y += 6;
-
-        factura.products.forEach((item) => {
-          if (y > 270) {
-            doc.addPage();
-            y = 20;
+              total: total,
+              products: selectedProducts,
+            });
+            alert("Pedido registrado exitosamente");
+            orderForm.reset();
+            clearAddedProducts();
+            fetchFacturasFromDB();
+            showSection("facturas");
+          } else {
+            throw new Error(data.message || "Error al guardar el pedido");
           }
-          doc.text(item.name, marginLeft, y);
-          doc.text(item.quantity.toString(), marginLeft + 90, y);
-          doc.text(`$${item.price.toFixed(2)}`, marginLeft + 120, y);
-          const totalItem = item.price * item.quantity;
-          doc.text(`$${totalItem.toFixed(2)}`, marginLeft + 160, y);
-          y += 7;
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert(error.message);
         });
+    }
 
-        y += 5;
-        doc.setFont(undefined, "bold");
-        doc.text(`Total Pedido: $${Number(factura.total).toFixed(2)}`, marginLeft, y);
+    orderForm.addEventListener("submit", crearPedidoSubmitHandler);
 
-        doc.save(`Pedido_${factura.business_name.replace(/\s+/g, "_")}.pdf`);
-      }
+    function generarPDF(factura) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
 
-      function showLoginForm() {
-        registerForm.style.display = "none";
-        loginForm.style.display = "block";
-      }
+      const marginLeft = 15;
+      let y = 20;
+
+      const fecha = new Date(factura.date);
+      const dateStr =
+        fecha.toLocaleDateString("es-ES") +
+        " " +
+        fecha.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+
+      doc.setFontSize(16);
+      doc.setTextColor("#4f46e5"); // Indigo-600
+      doc.text("Pedido - Party Color 2011", marginLeft, y);
+      y += 10;
+
+      doc.setFontSize(12);
+      doc.setTextColor("#000000");
+      doc.text(`RIF: ${factura.rif}`, marginLeft, y);
+      y += 7;
+      doc.text(`Nombre del negocio: ${factura.business_name}`, marginLeft, y);
+      y += 7;
+      doc.text(`Fecha: ${dateStr}`, marginLeft, y);
+      y += 10;
+
+      doc.setFont(undefined, "bold");
+      doc.text("Producto", marginLeft, y);
+      doc.text("Cantidad", marginLeft + 90, y);
+      doc.text("Precio Unitario", marginLeft + 120, y);
+      doc.text("Total", marginLeft + 160, y);
+      doc.setFont(undefined, "normal");
+      y += 6;
+
+      factura.products.forEach((item) => {
+        if (y > 270) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.text(item.name, marginLeft, y);
+        doc.text(item.quantity.toString(), marginLeft + 90, y);
+        doc.text(`$${item.price}`, marginLeft + 120, y);
+        const totalItem = item.price * item.quantity;
+        doc.text(`$${totalItem.toFixed(2)}`, marginLeft + 160, y);
+        y += 7;
+      });
+
+      y += 5;
+      doc.setFont(undefined, "bold");
+      doc.text(`Total Pedido: $${Number(factura.total).toFixed(2)}`, marginLeft, y);
+
+      doc.save(`Pedido_${factura.business_name.replace(/\s+/g, "_")}.pdf`);
+    }
+
+    function showLoginForm() {
+      registerForm.style.display = "none";
+      loginForm.style.display = "block";
+    }
 
 
-      
+
   </script>
- </body>
+</body>
+
 </html>

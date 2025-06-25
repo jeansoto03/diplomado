@@ -6,11 +6,9 @@
   <title>
     Stock de Productos - Login
   </title>
-  <script src="https://cdn.tailwindcss.com">
-  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
-  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     /* media queries navbar responsive */
     @media (max-width: 768px) {
@@ -93,8 +91,7 @@
           <button aria-label="Mostrar contraseña"
             class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none"
             id="toggleLoginPassword" type="button">
-            <i class="fas fa-eye">
-            </i>
+            <i class="fas fa-eye"></i>
           </button>
         </div>
         <button class="w-full bg-indigo-600 text-white font-semibold py-2 rounded hover:bg-indigo-700 transition"
@@ -138,8 +135,7 @@
           <button aria-label="Mostrar contraseña"
             class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none"
             id="toggleRegisterPassword" type="button">
-            <i class="fas fa-eye">
-            </i>
+            <i class="fas fa-eye"></i>
           </button>
         </div>
         <button class="w-full bg-indigo-600 text-white font-semibold py-2 rounded hover:bg-indigo-700 transition"
@@ -203,8 +199,6 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10" id="productos-container">
 
         </div>
-
-
       </section>
       <section class="hidden max-w-3xl mx-auto" id="crearPedidoSection">
         <h1 class="text-indigo-700 font-bold text-xl md:text-2xl text-center mb-6">
@@ -292,23 +286,20 @@
         <div class="bg-white rounded-lg shadow-lg max-w-sm w-full p-6 relative">
           <button aria-label="Cerrar"
             class="absolute top-3 right-3 text-gray-600 hover:text-gray-900 focus:outline-none" id="closeContactCard">
-            <i class="fas fa-times text-xl">
-            </i>
+            <i class="fas fa-times text-xl"></i>
           </button>
           <h3 class="text-xl font-bold text-indigo-700 mb-4 text-center">
             Contáctanos
           </h3>
           <div class="space-y-4 text-indigo-900">
             <div class="flex items-center space-x-3">
-              <i class="fas fa-phone-alt text-lg">
-              </i>
+              <i class="fas fa-phone-alt text-lg"></i>
               <span class="text-lg font-semibold">
                 +58 412 945 7475
               </span>
             </div>
             <div class="flex items-center space-x-3">
-              <i class="fas fa-envelope text-lg">
-              </i>
+              <i class="fas fa-envelope text-lg"></i>
               <span class="text-lg font-semibold">
                 mas0167@hotmail.com
               </span>
@@ -319,22 +310,14 @@
     </main>
   </div>
   <script>
-    // 1. Variable global para almacenar productos
     let productosGlobales = [];
 
-    // 2. Función para obtener productos (mejorada)
     async function fetchProductosFromEndpoint() {
       try {
         const response = await fetch("http://localhost/diplomado/backend/productos/traerProductos.php");
-
-        if (!response.ok) {
-          throw new Error(`Error HTTP: ${response.status}`);
-        }
-
+        if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
         const data = await response.json();
-
         if (data.success && Array.isArray(data.productos)) {
-          // Guardar en variable global
           productosGlobales = data.productos;
           return data.productos;
         } else {
@@ -346,36 +329,27 @@
       }
     }
 
-    // 3. Función para mostrar productos (corregida)
     function showProducts(products) {
       const productsList = document.getElementById("productos-container");
-
       if (!productsList) {
         console.error("Elemento 'productos-container' no encontrado");
         return;
       }
-
       productsList.innerHTML = "";
-
-      // Verificar si products es válido
       if (!products || !Array.isArray(products)) {
         console.error("Productos inválidos:", products);
         productsList.innerHTML = '<p class="text-red-500">Error al cargar productos</p>';
         return;
       }
-
-      // Manejar caso sin productos
       if (products.length === 0) {
         productsList.innerHTML = '<p class="text-gray-500">No hay productos disponibles.</p>';
         return;
       }
-
-      // Corregido: usar 'producto' en lugar de 'products'
       products.forEach(producto => {
         const productItem = document.createElement("div");
         productItem.innerHTML = `
       <article class="bg-white rounded-md shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-        <img alt="${producto.nombre}" class="w-full h-48 object-cover bg-gray-200" src="${producto.img}">
+        <img alt="${producto.nombre}, imagen del producto con fondo neutro y colores vivos" class="w-full h-48 object-cover bg-gray-200" src="${producto.img}">
         <div class="p-4 text-indigo-900 flex-grow flex flex-col">
           <h2 class="font-bold mb-2">${producto.nombre}</h2>
           <p class="text-sm mb-3 flex-grow">${producto.descripcion}</p>
@@ -387,16 +361,11 @@
       });
     }
 
-    // 4. Inicialización
     document.addEventListener('DOMContentLoaded', async () => {
       const productos = await fetchProductosFromEndpoint();
       showProducts(productos);
     });
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      const products = await fetchProductosFromEndpoint();
-      showProducts(products);
-    });
     const loginForm = document.getElementById("loginForm");
     const registerForm = document.getElementById("registerForm");
     const showRegisterBtn = document.getElementById("showRegister");
@@ -430,8 +399,9 @@
     const facturasTableBody = document.getElementById("facturasTableBody");
 
     const addedProducts = {};
-
     let facturas = [];
+    let isEditingFactura = false;
+    let editingFacturaId = null;
 
     showRegisterBtn.addEventListener("click", () => {
       loginForm.style.display = "none";
@@ -454,17 +424,11 @@
         return;
       }
 
-      const formData = {
-        name: name,
-        email: email,
-        password: password,
-      };
+      const formData = { name, email, password };
 
       fetch("./backend/auth/procesarRegistro.php", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       })
         .then((response) => response.json())
@@ -496,42 +460,23 @@
 
       fetch("./backend/auth/procesarLogin.php", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
-          }
+        .then(async (response) => {
+          if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
           const contentType = response.headers.get("content-type");
-          if (!contentType || !contentType.includes("application/json")) {
-            throw new TypeError("La respuesta no es JSON");
-          }
+          if (!contentType || !contentType.includes("application/json")) throw new TypeError("La respuesta no es JSON");
           return response.json();
         })
         .then((data) => {
           if (data.success) {
             appDiv.style.display = "none";
             mainPageDiv.classList.remove("hidden");
-
-            localStorage.setItem(
-              "user",
-              JSON.stringify({
-                id: data.user.id,
-                email: data.user.email,
-                name: data.user.name,
-              })
-            );
-            checkAuthState();
-
+            localStorage.setItem("user", JSON.stringify({ id: data.user.id, email: data.user.email, name: data.user.name }));
             userEmailDisplay.textContent = data.user.email;
-
             showSection("productos");
+            fetchFacturasFromDB();
           } else {
             alert(data.message || "Error en el login");
           }
@@ -548,6 +493,9 @@
       appDiv.style.display = "flex";
       loginForm.reset();
       showLoginForm();
+      clearAddedProducts();
+      isEditingFactura = false;
+      editingFacturaId = null;
     });
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -557,7 +505,6 @@
     function checkAuthState() {
       try {
         const userData = JSON.parse(localStorage.getItem("user"));
-
         if (userData?.id && userData?.email) {
           appDiv.style.display = "none";
           mainPageDiv.classList.remove("hidden");
@@ -611,6 +558,7 @@
       showSection("crearPedido");
       renderProductsList(productos);
       renderAddedProducts();
+      resetOrderForm();
     });
     facturasBtn.addEventListener("click", () => {
       showSection("facturas");
@@ -628,7 +576,6 @@
     }
 
     function renderProductsList(products) {
-      console.log("Rendering products list:", products);
       productsList.innerHTML = "";
       products.forEach((product) => {
         const productDiv = document.createElement("div");
@@ -636,7 +583,7 @@
 
         const img = document.createElement("img");
         img.src = product.img;
-        img.alt = product.nombre + ", imagen del producto";
+        img.alt = product.nombre + ", imagen del producto con fondo neutro y colores vivos";
         img.className = "w-16 h-16 object-cover rounded";
         img.width = 64;
         img.height = 64;
@@ -695,13 +642,12 @@
     }
 
     function addProductToOrder(product, quantity) {
-      console.log("Adding product to order:", product, quantity);
       if (addedProducts[product.id]) {
         addedProducts[product.id].quantity += quantity;
       } else {
         addedProducts[product.id] = {
           name: product.nombre,
-          price: product.precio,
+          price: parseFloat(product.precio),
           quantity: quantity,
         };
       }
@@ -717,7 +663,6 @@
         return;
       }
       keys.forEach((key) => {
-        console.log("Rendering added product:", key, addedProducts[key]);
         const item = addedProducts[key];
         const li = document.createElement("li");
         li.className = "flex justify-between border-b border-gray-200 py-1 items-center";
@@ -774,14 +719,19 @@
       renderAddedProducts();
     }
 
+    function resetOrderForm() {
+      orderForm.reset();
+      clearAddedProducts();
+      isEditingFactura = false;
+      editingFacturaId = null;
+    }
+
     function fetchFacturasFromDB() {
       const userData = JSON.parse(localStorage.getItem("user"));
-
       if (!userData?.id) {
         alert("Usuario no autenticado");
         return;
       }
-
       fetch(`./backend/factura/traerFacturas.php?user_id=${userData.id}`)
         .then((response) => {
           if (!response.ok) throw new Error("Error al obtener facturas");
@@ -803,7 +753,6 @@
 
     function renderFacturasTable(facturasData = []) {
       facturasTableBody.innerHTML = "";
-
       if (facturasData.length === 0) {
         facturasTableBody.innerHTML = `
               <tr>
@@ -814,7 +763,6 @@
           `;
         return;
       }
-
       facturasData.forEach((factura, index) => {
         const tr = document.createElement("tr");
         tr.className = "border-b border-gray-200";
@@ -835,7 +783,12 @@
         const tdProducts = document.createElement("td");
         tdProducts.className = "py-3 px-4 max-w-xs";
         tdProducts.style.whiteSpace = "pre-wrap";
-        const productos = JSON.parse(factura.products);
+        let productos = [];
+        try {
+          productos = JSON.parse(factura.products);
+        } catch {
+          productos = [];
+        }
         tdProducts.textContent = productos
           .map(
             (p) =>
@@ -901,109 +854,107 @@
         alert("Factura no encontrada");
         return;
       }
-
       showSection("crearPedido");
-
       document.getElementById("rif").value = factura.rif;
       document.getElementById("businessName").value = factura.business_name;
-
       clearAddedProducts();
 
-      const productos = JSON.parse(factura.products);
+      let productos = [];
+      try {
+        productos = JSON.parse(factura.products);
+      } catch {
+        productos = [];
+      }
+
       productos.forEach((p) => {
-        const prod = products.find((pr) => pr.name === p.name);
+        const prod = productosGlobales.find((pr) => pr.nombre === p.name);
         if (prod) {
           addedProducts[prod.id] = {
-            name: prod.name,
-            price: prod.price,
+            name: prod.nombre,
+            price: parseFloat(prod.precio),
             quantity: p.quantity,
           };
         }
       });
       renderAddedProducts();
 
+      isEditingFactura = true;
+      editingFacturaId = factura.id;
+
       orderForm.removeEventListener("submit", crearPedidoSubmitHandler);
       orderForm.addEventListener(
         "submit",
-        function actualizarFacturaSubmitHandler(e) {
-          e.preventDefault();
-
-          const rif = document.getElementById("rif").value.trim();
-          const businessName = document.getElementById("businessName").value.trim();
-          const userData = JSON.parse(localStorage.getItem("user"));
-
-          if (!userData?.id) {
-            alert("Usuario no autenticado");
-            return;
-          }
-          if (!rif || !businessName) {
-            alert("Por favor, ingresa el RIF y el nombre del negocio.");
-            return;
-          }
-
-          const selectedProducts = Object.values(addedProducts).filter(
-            (p) => p.quantity > 0
-          );
-          if (selectedProducts.length === 0) {
-            alert("Por favor, agrega al menos un producto al pedido.");
-            return;
-          }
-
-          const total = selectedProducts.reduce(
-            (acc, p) => acc + p.price * p.quantity,
-            0
-          );
-          const now = new Date();
-          const dateStr = now.toISOString();
-
-          const facturaData = {
-            id: factura.id,
-            user_id: userData.id,
-            rif,
-            business_name: businessName,
-            date: dateStr,
-            total,
-            products: selectedProducts.map((p) => ({
-              name: p.name,
-              quantity: p.quantity,
-              price: p.price,
-            })),
-          };
-          fetch("./backend/factura/actualizarFactura.php", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(facturaData),
-          })
-            .then((response) => {
-              if (!response.ok)
-                throw new Error("Error en la respuesta del servidor");
-              return response.json();
-            })
-            .then((data) => {
-              if (data.success) {
-                alert("Factura actualizada exitosamente");
-                orderForm.reset();
-                clearAddedProducts();
-                fetchFacturasFromDB();
-                showSection("facturas");
-                orderForm.removeEventListener(
-                  "submit",
-                  actualizarFacturaSubmitHandler
-                );
-                orderForm.addEventListener("submit", crearPedidoSubmitHandler);
-              } else {
-                throw new Error(data.message || "Error al actualizar la factura");
-              }
-            })
-            .catch((error) => {
-              console.error("Error:", error);
-              alert(error.message);
-            });
-        },
+        actualizarFacturaSubmitHandler,
         { once: true }
       );
+    }
+
+    function actualizarFacturaSubmitHandler(e) {
+      e.preventDefault();
+      const rif = document.getElementById("rif").value.trim();
+      const businessName = document.getElementById("businessName").value.trim();
+      const userData = JSON.parse(localStorage.getItem("user"));
+
+      if (!userData?.id) {
+        alert("Usuario no autenticado");
+        return;
+      }
+      if (!rif || !businessName) {
+        alert("Por favor, ingresa el RIF y el nombre del negocio.");
+        return;
+      }
+
+      const selectedProducts = Object.values(addedProducts).filter(
+        (p) => p.quantity > 0
+      );
+      if (selectedProducts.length === 0) {
+        alert("Por favor, agrega al menos un producto al pedido.");
+        return;
+      }
+
+      const total = selectedProducts.reduce(
+        (acc, p) => acc + p.price * p.quantity,
+        0
+      );
+      const now = new Date();
+      const dateStr = now.toISOString();
+
+      const facturaData = {
+        id: editingFacturaId,
+        user_id: userData.id,
+        rif,
+        business_name: businessName,
+        date: dateStr,
+        total,
+        products: selectedProducts.map((p) => ({
+          name: p.name,
+          quantity: p.quantity,
+          price: p.price,
+        })),
+      };
+      fetch("./backend/factura/actualizarFactura.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(facturaData),
+      })
+        .then((response) => {
+          if (!response.ok) throw new Error("Error en la respuesta del servidor");
+          return response.json();
+        })
+        .then((data) => {
+          if (data.success) {
+            alert("Factura actualizada exitosamente");
+            resetOrderForm();
+            fetchFacturasFromDB();
+            showSection("facturas");
+          } else {
+            throw new Error(data.message || "Error al actualizar la factura");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert(error.message);
+        });
     }
 
     function eliminarFactura(index) {
@@ -1015,7 +966,6 @@
       if (!confirm(`¿Estás seguro de eliminar la factura de ${factura.business_name}?`)) {
         return;
       }
-
       fetch(`./backend/factura/eliminarFactura.php?id=${factura.id}`, {
         method: "POST",
       })
@@ -1039,6 +989,11 @@
 
     function crearPedidoSubmitHandler(e) {
       e.preventDefault();
+      if (isEditingFactura) {
+        // Prevent creating new factura while editing
+        alert("Actualmente estás editando una factura. Por favor, guarda o cancela la edición.");
+        return;
+      }
       const rif = document.getElementById("rif").value.trim();
       const businessName = document.getElementById("businessName").value.trim();
       const userData = JSON.parse(localStorage.getItem("user"));
@@ -1060,15 +1015,8 @@
         return;
       }
 
-      console.log("Calculando total:", selectedProducts);
       const total = selectedProducts.reduce(
-        (acc, p) => {
-          // Convertir precios de formato "12.345,00" a número
-          const precioNumerico = parseFloat(
-            p.price.replace(/\./g, '').replace(',', '.')
-          );
-          return acc + precioNumerico * p.quantity;
-        },
+        (acc, p) => acc + p.price * p.quantity,
         0
       );
       const now = new Date();
@@ -1086,12 +1034,9 @@
           price: p.price,
         })),
       };
-      console.log("Factura data:", facturaData);
       fetch("./backend/factura/procesarFactura.php", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(facturaData),
       })
         .then((response) => {
@@ -1108,8 +1053,7 @@
               products: selectedProducts,
             });
             alert("Pedido registrado exitosamente");
-            orderForm.reset();
-            clearAddedProducts();
+            resetOrderForm();
             fetchFacturasFromDB();
             showSection("facturas");
           } else {
@@ -1166,8 +1110,8 @@
         }
         doc.text(item.name, marginLeft, y);
         doc.text(item.quantity.toString(), marginLeft + 90, y);
-        doc.text(`$${item.price}`, marginLeft + 120, y);
-        const totalItem = item.price * item.quantity;
+        doc.text(`$${parseFloat(item.price).toFixed(2)}`, marginLeft + 120, y);
+        const totalItem = parseFloat(item.price) * item.quantity;
         doc.text(`$${totalItem.toFixed(2)}`, marginLeft + 160, y);
         y += 7;
       });
@@ -1183,9 +1127,6 @@
       registerForm.style.display = "none";
       loginForm.style.display = "block";
     }
-
-
-
   </script>
 </body>
 

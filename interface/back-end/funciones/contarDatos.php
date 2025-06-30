@@ -18,6 +18,12 @@ try {
     $stmt_productos->execute();
     $total_productos = $stmt_productos->fetch(PDO::FETCH_ASSOC)['total_productos'];
 
+     // Contar usuarios
+    $sql_factura = "SELECT COUNT(*) AS total_facturas FROM invoices";
+    $stmt_facturas = $pdo->prepare($sql_factura);
+    $stmt_facturas->execute();
+    $total_facturas = $stmt_facturas->fetch(PDO::FETCH_ASSOC)['total_facturas'];
+
     // Mostrar resultados
     // echo "Total de productos: " . $total_productos . "<br>";
     // echo "Total de usuarios: " . $total_usuarios . "<br>";

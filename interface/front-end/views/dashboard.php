@@ -138,10 +138,10 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['name'])) {
                   <div class="level-item">
                     <div class="is-widget-label">
                       <h3 class="subtitle is-spaced">
-                        salida de productos
+                        Facturas Generadas
                       </h3>
                       <h1 class="title">
-                        256%
+                        <?php echo $total_facturas ?>
                       </h1>
                     </div>
                   </div>

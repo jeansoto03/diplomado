@@ -4,6 +4,9 @@ include_once '../../back-end/conexion/conexion.php';
 
 session_start();
 
+if (!isset($_SESSION['id']) || !isset($_SESSION['name']) || $_SESSION['rol'] != 1) {
+  echo "<meta http-equiv='refresh' content='0; url=index.php?alert=1'>";
+} else {
 
 
 
@@ -45,7 +48,7 @@ session_start();
               </ul>
             </div>
           </div>
-          
+
         </div>
       </section>
       <section class="hero is-hero-bar">
@@ -192,3 +195,6 @@ session_start();
   </body>
 
   </html>
+<?php
+}
+?>

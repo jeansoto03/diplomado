@@ -10,64 +10,209 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    /* media queries navbar responsive */
-    @media (max-width: 768px) {
-      nav div.flex.items-center.space-x-6 {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 0.75rem;
-      }
-
-      nav div.flex.items-center.space-x-6 button {
-        flex: 1 1 45%;
-        text-align: center;
-      }
-
-      nav div.flex.items-center.space-x-4.text-sm.md\:text-base {
-        justify-content: center;
-        margin-top: 0.5rem;
-      }
+    /* Custom scrollbar for sidebar */
+    #sidebar::-webkit-scrollbar {
+      width: 8px;
     }
 
-    @media (max-width: 480px) {
-      nav div.flex.items-center.space-x-6 button {
-        flex: 1 1 100%;
-      }
-
-      nav div.flex.items-center.space-x-4.text-sm.md\:text-base {
-        flex-wrap: wrap;
-        gap: 0.5rem;
-      }
+    #sidebar::-webkit-scrollbar-track {
+      background: transparent;
     }
 
-    /* Navbar hover and focus styles */
-    nav button,
-    nav span {
-      transition: color 0.3s ease, background-color 0.3s ease;
-      border-radius: 0.375rem;
-      /* rounded-md */
-      padding: 0.25rem 0.5rem;
-    }
-
-    nav button:hover,
-    nav button:focus-visible {
-      background-color: #1f2937;
-      /* dark slate gray */
-      color: #f9fafb;
-      /* near white */
-      outline: none;
-    }
-
-    nav span:hover,
-    nav span:focus-visible {
-      color: #1f2937;
-      cursor: default;
+    #sidebar::-webkit-scrollbar-thumb {
+      background-color: rgba(99, 102, 241, 0.5);
+      border-radius: 4px;
     }
   </style>
 </head>
 
 <body class="bg-gray-100 font-sans">
-  <div class="min-h-screen flex items-center justify-center px-4" id="app">
+  <div class="min-h-screen flex" id="mainPage" style="display:none;">
+    <!-- Sidebar -->
+    <aside id="sidebar"
+      class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+        <span class="text-2xl font-bold text-indigo-700 select-none">Party Color 2011</span>
+        <button id="closeSidebarBtn" aria-label="Cerrar menú"
+          class="md:hidden text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 rounded">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <nav class="mt-6 px-4 flex flex-col space-y-1">
+        <button id="productosBtn" type="button"
+          class="flex items-center space-x-3 px-4 py-2 rounded-md text-indigo-700 font-semibold hover:bg-indigo-100 focus:outline-none focus:bg-indigo-200 transition">
+          <i class="fas fa-box-open w-5"></i>
+          <span>Productos</span>
+        </button>
+        <button id="crearPedidoBtn" type="button"
+          class="flex items-center space-x-3 px-4 py-2 rounded-md text-indigo-700 font-semibold hover:bg-indigo-100 focus:outline-none focus:bg-indigo-200 transition">
+          <i class="fas fa-file-alt w-5"></i>
+          <span>Crear Pedido</span>
+        </button>
+        <button id="facturasBtn" type="button"
+          class="flex items-center space-x-3 px-4 py-2 rounded-md text-indigo-700 font-semibold hover:bg-indigo-100 focus:outline-none focus:bg-indigo-200 transition">
+          <i class="fas fa-file-invoice w-5"></i>
+          <span>Facturas</span>
+        </button>
+        <button id="contactanosBtn" type="button"
+          class="flex items-center space-x-3 px-4 py-2 rounded-md text-indigo-700 font-semibold hover:bg-indigo-100 focus:outline-none focus:bg-indigo-200 transition">
+          <i class="fas fa-envelope w-5"></i>
+          <span>Contáctanos</span>
+        </button>
+      </nav>
+      <div class="mt-auto px-6 py-4 border-t border-gray-200 flex items-center justify-between space-x-3">
+        <span id="userEmailDisplay" class="text-indigo-700 font-semibold truncate max-w-[140px]"></span>
+        <button id="logoutBtn"
+          class="bg-indigo-600 text-white font-semibold px-3 py-1 rounded shadow hover:bg-indigo-700 transition duration-200 whitespace-nowrap">
+          Cerrar Sesión
+        </button>
+      </div>
+    </aside>
+
+    <!-- Overlay for mobile when sidebar is open -->
+    <div id="sidebarOverlay"
+      class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden"></div>
+
+    <!-- Main content -->
+    <div class="flex-1 flex flex-col min-h-screen md:pl-64">
+      <header
+        class="w-full bg-white shadow-md flex items-center justify-between px-4 py-3 sticky top-0 z-30 md:hidden">
+        <button id="openSidebarBtn" aria-label="Abrir menú"
+          class="text-indigo-700 hover:text-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 rounded">
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
+        <span class="text-indigo-700 font-bold text-lg select-none">Party Color 2011</span>
+        <div class="w-8"></div>
+      </header>
+      <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 overflow-auto">
+        <section id="productosSection">
+          <h1 class="text-indigo-700 font-bold text-xl md:text-2xl text-center mb-6">
+            Stock de Productos
+          </h1>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10" id="productos-container">
+
+          </div>
+        </section>
+        <section class="hidden max-w-3xl mx-auto" id="crearPedidoSection">
+          <h1 class="text-indigo-700 font-bold text-xl md:text-2xl text-center mb-6">
+            Crear Pedido
+          </h1>
+          <form class="bg-white rounded-md shadow-md p-6 space-y-6" id="orderForm">
+            <div>
+              <label class="block font-semibold text-indigo-700 mb-1" for="rif">
+                RIF del negocio
+              </label>
+              <input
+                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                id="rif" placeholder="J-12345678-9" required="" type="text" />
+            </div>
+            <div>
+              <label class="block font-semibold text-indigo-700 mb-1" for="businessName">
+                Nombre del negocio
+              </label>
+              <input
+                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                id="businessName" placeholder="Nombre del negocio" required="" type="text" />
+            </div>
+            <div>
+              <h2 class="font-semibold text-indigo-700 mb-2">
+                Productos
+              </h2>
+              <div class="space-y-4 max-h-96 overflow-y-auto border border-gray-300 rounded-md p-4" id="productsList">
+              </div>
+            </div>
+            <div>
+              <h2 class="font-semibold text-indigo-700 mb-2">
+                Productos agregados
+              </h2>
+              <ul class="border border-gray-300 rounded-md p-4 min-h-[80px] text-indigo-900" id="addedProductsList">
+                <li class="text-gray-500">
+                  No hay productos agregados.
+                </li>
+              </ul>
+            </div>
+            <button class="w-full bg-indigo-600 text-white font-semibold py-2 rounded hover:bg-indigo-700 transition"
+              type="submit">
+              Generar PDF del Pedido
+            </button>
+          </form>
+        </section>
+        <section class="hidden" id="facturasSection">
+          <h1 class="text-indigo-700 font-bold text-xl md:text-2xl text-center mb-6">
+            Facturas
+          </h1>
+          <div class="max-w-md mx-auto mb-4 space-y-2">
+            <input type="text" id="searchRifInput" placeholder="Buscar por RIF"
+              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              aria-label="Buscar facturas por RIF" />
+            <input type="text" id="searchBusinessNameInput" placeholder="Buscar por Nombre del negocio"
+              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              aria-label="Buscar facturas por nombre del negocio" />
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full bg-white rounded-md shadow-md">
+              <thead>
+                <tr class="bg-indigo-700 text-white text-left">
+                  <th class="py-3 px-4">
+                    RIF
+                  </th>
+                  <th class="py-3 px-4">
+                    Nombre del Negocio
+                  </th>
+                  <th class="py-3 px-4">
+                    Fecha
+                  </th>
+                  <th class="py-3 px-4">
+                    Productos
+                  </th>
+                  <th class="py-3 px-4">
+                    Total
+                  </th>
+                  <th class="py-3 px-4">
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="text-indigo-900" id="facturasTableBody">
+                <tr>
+                  <td class="text-center py-4 text-gray-500" colspan="6">
+                    No hay facturas registradas.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden" id="contactCard">
+          <div class="bg-white rounded-lg shadow-lg max-w-sm w-full p-6 relative">
+            <button aria-label="Cerrar"
+              class="absolute top-3 right-3 text-gray-600 hover:text-gray-900 focus:outline-none" id="closeContactCard">
+              <i class="fas fa-times text-xl"></i>
+            </button>
+            <h3 class="text-xl font-bold text-indigo-700 mb-4 text-center">
+              Contáctanos
+            </h3>
+            <div class="space-y-4 text-indigo-900">
+              <div class="flex items-center space-x-3">
+                <i class="fas fa-phone-alt text-lg"></i>
+                <span class="text-lg font-semibold">
+                  +58 412 945 7475
+                </span>
+              </div>
+              <div class="flex items-center space-x-3">
+                <i class="fas fa-envelope text-lg"></i>
+                <span class="text-lg font-semibold">
+                  mas0167@hotmail.com
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="min-h-screen flex items-center justify-center px-4" id="app" style="display:flex;">
     <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-8">
       <div class="mb-6 flex justify-center">
         <a href="http://localhost/diplomado/interface/front-end/views/dashboard.php" id="adminPanelBtn"
@@ -157,164 +302,7 @@
       </form>
     </div>
   </div>
-  <div class="hidden min-h-screen flex flex-col" id="mainPage">
-    <nav class="bg-white text-gray-800 px-6 py-3 shadow-md sticky top-0 z-50">
-      <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between">
-        <div class="flex items-center space-x-6 font-bold text-lg md:text-xl tracking-wide">
-          <span class="text-2xl text-indigo-700 select-none">
-            Party Color 2011
-          </span>
-          <button
-            class="hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-1 px-2 py-1 transition duration-300 rounded-md whitespace-nowrap"
-            id="productosBtn" type="button">
-            Productos
-          </button>
-          <button
-            class="hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-1 px-2 py-1 transition duration-300 rounded-md whitespace-nowrap"
-            id="crearPedidoBtn" type="button">
-            Crear Pedido
-          </button>
-          <button
-            class="hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-1 px-2 py-1 transition duration-300 rounded-md whitespace-nowrap"
-            id="facturasBtn" type="button">
-            Facturas
-          </button>
-          <button
-            class="hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-1 px-2 py-1 transition duration-300 rounded-md whitespace-nowrap"
-            id="contactanosBtn" type="button">
-            Contáctanos
-          </button>
-        </div>
-        <div
-          class="flex items-center space-x-4 text-sm md:text-base mt-2 md:mt-0 flex-wrap justify-center md:justify-start gap-2">
-          <span class="font-semibold text-indigo-700 select-text" id="userEmailDisplay">
-          </span>
-          <button
-            class="bg-indigo-600 text-white font-semibold px-4 py-1 rounded shadow hover:bg-indigo-700 transition duration-200 whitespace-nowrap"
-            id="logoutBtn">
-            Cerrar Sesión
-          </button>
-        </div>
-      </div>
-    </nav>
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <section id="productosSection">
-        <h1 class="text-indigo-700 font-bold text-xl md:text-2xl text-center mb-6">
-          Stock de Productos
-        </h1>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10" id="productos-container">
 
-        </div>
-      </section>
-      <section class="hidden max-w-3xl mx-auto" id="crearPedidoSection">
-        <h1 class="text-indigo-700 font-bold text-xl md:text-2xl text-center mb-6">
-          Crear Pedido
-        </h1>
-        <form class="bg-white rounded-md shadow-md p-6 space-y-6" id="orderForm">
-          <div>
-            <label class="block font-semibold text-indigo-700 mb-1" for="rif">
-              RIF del negocio
-            </label>
-            <input
-              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
-              id="rif" placeholder="J-12345678-9" required="" type="text" />
-          </div>
-          <div>
-            <label class="block font-semibold text-indigo-700 mb-1" for="businessName">
-              Nombre del negocio
-            </label>
-            <input
-              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
-              id="businessName" placeholder="Nombre del negocio" required="" type="text" />
-          </div>
-          <div>
-            <h2 class="font-semibold text-indigo-700 mb-2">
-              Productos
-            </h2>
-            <div class="space-y-4 max-h-96 overflow-y-auto border border-gray-300 rounded-md p-4" id="productsList">
-            </div>
-          </div>
-          <div>
-            <h2 class="font-semibold text-indigo-700 mb-2">
-              Productos agregados
-            </h2>
-            <ul class="border border-gray-300 rounded-md p-4 min-h-[80px] text-indigo-900" id="addedProductsList">
-              <li class="text-gray-500">
-                No hay productos agregados.
-              </li>
-            </ul>
-          </div>
-          <button class="w-full bg-indigo-600 text-white font-semibold py-2 rounded hover:bg-indigo-700 transition"
-            type="submit">
-            Generar PDF del Pedido
-          </button>
-        </form>
-      </section>
-      <section class="hidden" id="facturasSection">
-        <h1 class="text-indigo-700 font-bold text-xl md:text-2xl text-center mb-6">
-          Facturas
-        </h1>
-        <div class="overflow-x-auto">
-          <table class="min-w-full bg-white rounded-md shadow-md">
-            <thead>
-              <tr class="bg-indigo-700 text-white text-left">
-                <th class="py-3 px-4">
-                  RIF
-                </th>
-                <th class="py-3 px-4">
-                  Nombre del Negocio
-                </th>
-                <th class="py-3 px-4">
-                  Fecha
-                </th>
-                <th class="py-3 px-4">
-                  Productos
-                </th>
-                <th class="py-3 px-4">
-                  Total
-                </th>
-                <th class="py-3 px-4">
-                  Acciones
-                </th>
-              </tr>
-            </thead>
-            <tbody class="text-indigo-900" id="facturasTableBody">
-              <tr>
-                <td class="text-center py-4 text-gray-500" colspan="6">
-                  No hay facturas registradas.
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-      <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden" id="contactCard">
-        <div class="bg-white rounded-lg shadow-lg max-w-sm w-full p-6 relative">
-          <button aria-label="Cerrar"
-            class="absolute top-3 right-3 text-gray-600 hover:text-gray-900 focus:outline-none" id="closeContactCard">
-            <i class="fas fa-times text-xl"></i>
-          </button>
-          <h3 class="text-xl font-bold text-indigo-700 mb-4 text-center">
-            Contáctanos
-          </h3>
-          <div class="space-y-4 text-indigo-900">
-            <div class="flex items-center space-x-3">
-              <i class="fas fa-phone-alt text-lg"></i>
-              <span class="text-lg font-semibold">
-                +58 412 945 7475
-              </span>
-            </div>
-            <div class="flex items-center space-x-3">
-              <i class="fas fa-envelope text-lg"></i>
-              <span class="text-lg font-semibold">
-                mas0167@hotmail.com
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
   <script>
     let productosGlobales = [];
 
@@ -370,6 +358,7 @@
     document.addEventListener('DOMContentLoaded', async () => {
       const productos = await fetchProductosFromEndpoint();
       showProducts(productos);
+      checkAuthState();
     });
 
     const loginForm = document.getElementById("loginForm");
@@ -403,11 +392,35 @@
     const addedProductsList = document.getElementById("addedProductsList");
 
     const facturasTableBody = document.getElementById("facturasTableBody");
+    const searchRifInput = document.getElementById("searchRifInput");
+    const searchBusinessNameInput = document.getElementById("searchBusinessNameInput");
 
     const addedProducts = {};
     let facturas = [];
+    let filteredFacturas = [];
     let isEditingFactura = false;
     let editingFacturaId = null;
+
+    const sidebar = document.getElementById("sidebar");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const openSidebarBtn = document.getElementById("openSidebarBtn");
+    const closeSidebarBtn = document.getElementById("closeSidebarBtn");
+
+    function openSidebar() {
+      sidebar.classList.remove("-translate-x-full");
+      sidebarOverlay.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeSidebar() {
+      sidebar.classList.add("-translate-x-full");
+      sidebarOverlay.classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+
+    openSidebarBtn?.addEventListener("click", openSidebar);
+    closeSidebarBtn?.addEventListener("click", closeSidebar);
+    sidebarOverlay?.addEventListener("click", closeSidebar);
 
     showRegisterBtn.addEventListener("click", () => {
       loginForm.style.display = "none";
@@ -478,7 +491,7 @@
         .then((data) => {
           if (data.success) {
             appDiv.style.display = "none";
-            mainPageDiv.classList.remove("hidden");
+            mainPageDiv.style.display = "flex";
             localStorage.setItem("user", JSON.stringify({ id: data.user.id, email: data.user.email, name: data.user.name }));
             userEmailDisplay.textContent = data.user.email;
             showSection("productos");
@@ -495,17 +508,14 @@
 
     logoutBtn.addEventListener("click", () => {
       localStorage.removeItem("user");
-      mainPageDiv.classList.add("hidden");
+      mainPageDiv.style.display = "none";
       appDiv.style.display = "flex";
       loginForm.reset();
       showLoginForm();
       clearAddedProducts();
       isEditingFactura = false;
       editingFacturaId = null;
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-      checkAuthState();
+      closeSidebar();
     });
 
     function checkAuthState() {
@@ -513,12 +523,12 @@
         const userData = JSON.parse(localStorage.getItem("user"));
         if (userData?.id && userData?.email) {
           appDiv.style.display = "none";
-          mainPageDiv.classList.remove("hidden");
+          mainPageDiv.style.display = "flex";
           userEmailDisplay.textContent = userData.email;
           showSection("productos");
           fetchFacturasFromDB();
         } else {
-          mainPageDiv.classList.add("hidden");
+          mainPageDiv.style.display = "none";
           appDiv.style.display = "flex";
         }
       } catch (error) {
@@ -546,6 +556,7 @@
 
     contactanosBtn.addEventListener("click", () => {
       contactCard.classList.remove("hidden");
+      closeSidebar();
     });
 
     closeContactCardBtn.addEventListener("click", () => {
@@ -558,17 +569,22 @@
       }
     });
 
-    productosBtn.addEventListener("click", () => showSection("productos"));
+    productosBtn.addEventListener("click", () => {
+      showSection("productos");
+      closeSidebar();
+    });
     crearPedidoBtn.addEventListener("click", async () => {
       const productos = await fetchProductosFromEndpoint();
       showSection("crearPedido");
       renderProductsList(productos);
       renderAddedProducts();
       resetOrderForm();
+      closeSidebar();
     });
     facturasBtn.addEventListener("click", () => {
       showSection("facturas");
       fetchFacturasFromDB();
+      closeSidebar();
     });
 
     function showSection(section) {
@@ -746,7 +762,8 @@
         .then((data) => {
           if (data.success) {
             facturas = data.facturas;
-            renderFacturasTable(facturas);
+            filteredFacturas = facturas;
+            renderFacturasTable(filteredFacturas);
           } else {
             throw new Error(data.message || "Error al cargar facturas");
           }
@@ -807,11 +824,15 @@
         tdTotal.textContent = `$${parseFloat(factura.total).toFixed(2)}`;
 
         const tdActions = document.createElement("td");
-        tdActions.className = "py-3 px-4 space-x-2";
+        tdActions.className = "py-3 px-4";
+
+        const btnContainer = document.createElement("div");
+        btnContainer.className = "flex flex-wrap gap-2 justify-start";
+
+        const baseBtnClasses = "flex-1 min-w-[90px] text-center px-3 py-1 rounded font-semibold text-sm transition focus:outline-none focus:ring-2 focus:ring-offset-1";
 
         const downloadBtn = document.createElement("button");
-        downloadBtn.className =
-          "bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 transition text-sm font-semibold";
+        downloadBtn.className = baseBtnClasses + " bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-600";
         downloadBtn.textContent = "Descargar PDF";
         downloadBtn.addEventListener("click", () => {
           generarPDF({
@@ -824,24 +845,24 @@
         });
 
         const editBtn = document.createElement("button");
-        editBtn.className =
-          "bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition text-sm font-semibold";
+        editBtn.className = baseBtnClasses + " bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-600";
         editBtn.textContent = "Editar";
         editBtn.addEventListener("click", () => {
           editarFactura(index);
         });
 
         const deleteBtn = document.createElement("button");
-        deleteBtn.className =
-          "bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition text-sm font-semibold";
+        deleteBtn.className = baseBtnClasses + " bg-red-600 text-white hover:bg-red-700 focus:ring-red-600";
         deleteBtn.textContent = "Eliminar";
         deleteBtn.addEventListener("click", () => {
           eliminarFactura(index);
         });
 
-        tdActions.appendChild(downloadBtn);
-        tdActions.appendChild(editBtn);
-        tdActions.appendChild(deleteBtn);
+        btnContainer.appendChild(downloadBtn);
+        btnContainer.appendChild(editBtn);
+        btnContainer.appendChild(deleteBtn);
+
+        tdActions.appendChild(btnContainer);
 
         tr.appendChild(tdRif);
         tr.appendChild(tdName);
@@ -854,8 +875,38 @@
       });
     }
 
+    // Filter facturas by RIF and Business Name inputs
+    function filterFacturas() {
+      const rifValue = searchRifInput.value.trim().toLowerCase();
+      const businessNameValue = searchBusinessNameInput.value.trim().toLowerCase();
+
+      filteredFacturas = facturas.filter(factura => {
+        const rifMatch = factura.rif.toLowerCase().includes(rifValue);
+        const nameMatch = factura.business_name.toLowerCase().includes(businessNameValue);
+        // Both filters active: AND logic
+        if (rifValue && businessNameValue) {
+          return rifMatch && nameMatch;
+        }
+        // Only rif filter active
+        if (rifValue) {
+          return rifMatch;
+        }
+        // Only business name filter active
+        if (businessNameValue) {
+          return nameMatch;
+        }
+        // No filters active
+        return true;
+      });
+
+      renderFacturasTable(filteredFacturas);
+    }
+
+    searchRifInput?.addEventListener("input", filterFacturas);
+    searchBusinessNameInput?.addEventListener("input", filterFacturas);
+
     function editarFactura(index) {
-      const factura = facturas[index];
+      const factura = filteredFacturas[index];
       if (!factura) {
         alert("Factura no encontrada");
         return;
@@ -964,7 +1015,7 @@
     }
 
     function eliminarFactura(index) {
-      const factura = facturas[index];
+      const factura = filteredFacturas[index];
       if (!factura) {
         alert("Factura no encontrada");
         return;
@@ -1074,7 +1125,9 @@
     orderForm.addEventListener("submit", crearPedidoSubmitHandler);
 
     function generarPDF(factura) {
-      const { jsPDF } = window.jspdf;
+      const {
+        jsPDF
+      } = window.jspdf;
       const doc = new jsPDF();
 
       const marginLeft = 15;
@@ -1084,7 +1137,10 @@
       const dateStr =
         fecha.toLocaleDateString("es-ES") +
         " " +
-        fecha.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+        fecha.toLocaleTimeString("es-ES", {
+          hour: "2-digit",
+          minute: "2-digit"
+        });
 
       doc.setFontSize(16);
       doc.setTextColor("#4f46e5"); // Indigo-600

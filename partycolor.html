@@ -245,6 +245,11 @@
             <i class="fas fa-eye"></i>
           </button>
         </div>
+        <div class="text-right">
+          <button type="button" id="forgotPasswordBtn" class="text-indigo-600 font-semibold hover:underline focus:outline-none text-sm">
+            ¿Olvidaste tu contraseña?
+          </button>
+        </div>
         <button class="w-full bg-indigo-600 text-white font-semibold py-2 rounded hover:bg-indigo-700 transition"
           id="loginBtn" type="submit">
           Iniciar Sesión
@@ -296,6 +301,30 @@
         <p class="text-center text-sm text-gray-600">
           ¿Ya tienes cuenta?
           <button class="text-indigo-600 font-semibold hover:underline focus:outline-none" id="showLogin">
+            Inicia sesión
+          </button>
+        </p>
+      </form>
+
+      <form class="space-y-6" id="forgotPasswordForm" onsubmit="return false" style="display: none;">
+        <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">
+          Recuperar Contraseña
+        </h2>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1" for="forgotEmail">
+            Ingresa tu correo electrónico
+          </label>
+          <input
+            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            id="forgotEmail" placeholder="usuario@ejemplo.com" required="" type="email" />
+        </div>
+        <button class="w-full bg-indigo-600 text-white font-semibold py-2 rounded hover:bg-indigo-700 transition"
+          id="sendResetBtn" type="submit">
+          Enviar enlace de recuperación
+        </button>
+        <p class="text-center text-sm text-gray-600">
+          ¿Recordaste tu contraseña?
+          <button class="text-indigo-600 font-semibold hover:underline focus:outline-none" id="backToLoginFromForgot">
             Inicia sesión
           </button>
         </p>
@@ -363,8 +392,11 @@
 
     const loginForm = document.getElementById("loginForm");
     const registerForm = document.getElementById("registerForm");
+    const forgotPasswordForm = document.getElementById("forgotPasswordForm");
     const showRegisterBtn = document.getElementById("showRegister");
     const showLoginBtn = document.getElementById("showLogin");
+    const forgotPasswordBtn = document.getElementById("forgotPasswordBtn");
+    const backToLoginFromForgotBtn = document.getElementById("backToLoginFromForgot");
     const appDiv = document.getElementById("app");
     const mainPageDiv = document.getElementById("mainPage");
     const userEmailDisplay = document.getElementById("userEmailDisplay");
@@ -425,11 +457,59 @@
     showRegisterBtn.addEventListener("click", () => {
       loginForm.style.display = "none";
       registerForm.style.display = "block";
+      forgotPasswordForm.style.display = "none";
     });
 
     showLoginBtn.addEventListener("click", () => {
       registerForm.style.display = "none";
       loginForm.style.display = "block";
+      forgotPasswordForm.style.display = "none";
+    });
+
+    forgotPasswordBtn.addEventListener("click", () => {
+      loginForm.style.display = "none";
+      registerForm.style.display = "none";
+      forgotPasswordForm.style.display = "block";
+    });
+
+    backToLoginFromForgotBtn.addEventListener("click", () => {
+      forgotPasswordForm.style.display = "none";
+      loginForm.style.display = "block";
+      registerForm.style.display = "none";
+    });
+
+    forgotPasswordForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("forgotEmail").value.trim().toLowerCase();
+      if (!email) {
+        alert("Por favor, ingresa tu correo electrónico.");
+        return;
+      }
+      // Aquí se debe implementar la lógica para enviar el correo de recuperación
+      // Por ejemplo, llamar a un endpoint backend que gestione el envío del email
+      fetch("./backend/auth/recuperarContrasena.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      })
+        .then((response) => {
+          if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+          return response.json();
+        })
+        .then((data) => {
+          if (data.success) {
+            alert("Se ha enviado un enlace de recuperación a tu correo electrónico.");
+            forgotPasswordForm.reset();
+            forgotPasswordForm.style.display = "none";
+            loginForm.style.display = "block";
+          } else {
+            alert(data.message || "Error al enviar el enlace de recuperación.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("Error al conectar con el servidor.");
+        });
     });
 
     registerForm.addEventListener("submit", (e) => {
@@ -1186,6 +1266,7 @@
 
     function showLoginForm() {
       registerForm.style.display = "none";
+      forgotPasswordForm.style.display = "none";
       loginForm.style.display = "block";
     }
   </script>

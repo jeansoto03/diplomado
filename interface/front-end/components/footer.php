@@ -4,7 +4,7 @@
           <div class="level">
             <div class="level-left">
               <div class="level-item">
-                © 2024   Jempier
+                © 2025   Partycolor 2011
               </div>
               <div class="level-item">
                 <a href="" style="height: 20px">

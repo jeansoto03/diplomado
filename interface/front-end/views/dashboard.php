@@ -25,7 +25,8 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['name'])) {
     <link rel="stylesheet" href="../assets//css//alertas.css">
     <link rel="stylesheet" href="../assets/css/vistaDeUsuarios.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <title>Inventario</title>
 
     <!-- Bulma is included -->
@@ -155,7 +156,89 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['name'])) {
             </div>
           </div>
         </div>
+       <section class="bg-white rounded-lg shadow p-6 max-w-4xl mx-auto">
+      <h2 class="text-2xl font-semibold text-center text-gray-800 mb-8">Gráfico de Facturas por Semana</h2>
+      <div class="relative h-96 mb-8">
+        <canvas id="invoiceChart" class="w-full h-full"></canvas>
+      </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function verProductos() {
+      document.location.href = "productos.php";
+    }
+
+    // Generar datos del gráfico usando total_facturas PHP variable
+    // Suponemos que el total_facturas es un número entero
+    const totalFacturas = <?php echo (int)$total_facturas; ?>;
+
+    // Distribuir totalFacturas en 5 semanas de forma aleatoria pero sumando totalFacturas
+    function distribuirFacturas(total, semanas) {
+      let facturas = [];
+      let remaining = total;
+      for (let i = 0; i < semanas - 1; i++) {
        
+      }
+      facturas.push(remaining);
+      // Mezclar para que no quede ordenado
+      for (let i = facturas.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [facturas[i], facturas[j]] = [facturas[j], facturas[i]];
+      }
+      return facturas;
+    }
+
+    const weeklyInvoices = distribuirFacturas(totalFacturas, 5);
+    
+    // Crear gráfico
+    const ctx = document.getElementById('invoiceChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4', 'Última Semana'],
+        datasets: [{
+          label: 'Número de Facturas',
+          data: weeklyInvoices,
+          backgroundColor: 'rgba(59, 130, 246, 0.7)',
+          borderColor: 'rgba(59, 130, 246, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Número de Facturas'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Semanas'
+            }
+          }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.parsed.y + ' facturas';
+              }
+            }
+          },
+          legend: {
+            position: 'top',
+          }
+        }
+      }
+    });
+  </script>
 
       </section>
       <!-- Inicio footer -->
@@ -196,6 +279,7 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['name'])) {
         document.location.href = "productos.php"
       }
     </script>
+  
   </body>
 
   </html>

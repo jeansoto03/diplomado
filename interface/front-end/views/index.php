@@ -26,11 +26,9 @@
                 <button type="submit">
                     Iniciar Sesión
                 </button>
-                <p class="text-center text-gray-600">
-                ¿No tienes cuenta?
             <a class="text-blue-600 hover:text-blue-800 font-semibold"
-             href="http://localhost/diplomado/interface/front-end/views/newUser.php">
-                 Regístrate aquí
+             href="http://localhost/diplomado/partycolor.html">
+                 Volver al stock
             </a>
         </div>
     </form>

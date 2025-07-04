@@ -141,41 +141,29 @@
           <h1 class="text-indigo-700 font-bold text-xl md:text-2xl text-center mb-6">
             Facturas
           </h1>
-          <div class="max-w-md mx-auto mb-4 space-y-2">
+          <div class="max-w-4xl mx-auto mb-6 flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
             <input type="text" id="searchRifInput" placeholder="Buscar por RIF"
-              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              class="flex-grow w-full sm:w-auto border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               aria-label="Buscar facturas por RIF" />
             <input type="text" id="searchBusinessNameInput" placeholder="Buscar por Nombre del negocio"
-              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              class="flex-grow w-full sm:w-auto border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               aria-label="Buscar facturas por nombre del negocio" />
           </div>
-          <div class="overflow-x-auto">
-            <table class="min-w-full bg-white rounded-md shadow-md">
-              <thead>
-                <tr class="bg-indigo-700 text-white text-left">
-                  <th class="py-3 px-4">
-                    RIF
-                  </th>
-                  <th class="py-3 px-4">
-                    Nombre del Negocio
-                  </th>
-                  <th class="py-3 px-4">
-                    Fecha
-                  </th>
-                  <th class="py-3 px-4">
-                    Productos
-                  </th>
-                  <th class="py-3 px-4">
-                    Total
-                  </th>
-                  <th class="py-3 px-4">
-                    Acciones
-                  </th>
+          <div class="overflow-x-auto rounded-md shadow-md border border-gray-300 bg-white">
+            <table class="min-w-full divide-y divide-gray-200" id="facturasTable" role="grid" aria-label="Tabla de facturas">
+              <thead class="bg-indigo-700 text-white">
+                <tr>
+                  <th scope="col" class="px-4 py-3 text-left text-sm font-semibold">RIF</th>
+                  <th scope="col" class="px-4 py-3 text-left text-sm font-semibold">Nombre del Negocio</th>
+                  <th scope="col" class="px-4 py-3 text-left text-sm font-semibold">Fecha</th>
+                  <th scope="col" class="px-4 py-3 text-left text-sm font-semibold max-w-xs">Productos</th>
+                  <th scope="col" class="px-4 py-3 text-left text-sm font-semibold">Total</th>
+                  <th scope="col" class="px-4 py-3 text-left text-sm font-semibold">Acciones</th>
                 </tr>
               </thead>
-              <tbody class="text-indigo-900" id="facturasTableBody">
+              <tbody class="divide-y divide-gray-200 text-indigo-900" id="facturasTableBody">
                 <tr>
-                  <td class="text-center py-4 text-gray-500" colspan="6">
+                  <td colspan="6" class="text-center py-6 text-gray-500">
                     No hay facturas registradas.
                   </td>
                 </tr>
@@ -485,8 +473,6 @@
         alert("Por favor, ingresa tu correo electrónico.");
         return;
       }
-      // Aquí se debe implementar la lógica para enviar el correo de recuperación
-      // Por ejemplo, llamar a un endpoint backend que gestione el envío del email
       fetch("./backend/auth/recuperarContrasena.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -859,7 +845,7 @@
       if (facturasData.length === 0) {
         facturasTableBody.innerHTML = `
               <tr>
-                  <td colspan="6" class="text-center py-4 text-gray-500">
+                  <td colspan="6" class="text-center py-6 text-gray-500">
                       No hay facturas registradas
                   </td>
               </tr>
@@ -868,24 +854,23 @@
       }
       facturasData.forEach((factura, index) => {
         const tr = document.createElement("tr");
-        tr.className = "border-b border-gray-200";
+        tr.className = "border-b border-gray-200 hover:bg-indigo-50";
 
         const tdRif = document.createElement("td");
-        tdRif.className = "py-3 px-4";
+        tdRif.className = "py-3 px-4 whitespace-nowrap";
         tdRif.textContent = factura.rif;
 
         const tdName = document.createElement("td");
-        tdName.className = "py-3 px-4";
+        tdName.className = "py-3 px-4 whitespace-nowrap";
         tdName.textContent = factura.business_name;
 
         const tdDate = document.createElement("td");
-        tdDate.className = "py-3 px-4";
+        tdDate.className = "py-3 px-4 whitespace-nowrap";
         const fecha = new Date(factura.date);
         tdDate.textContent = `${fecha.toLocaleDateString()} ${fecha.toLocaleTimeString()}`;
 
         const tdProducts = document.createElement("td");
-        tdProducts.className = "py-3 px-4 max-w-xs";
-        tdProducts.style.whiteSpace = "pre-wrap";
+        tdProducts.className = "py-3 px-4 max-w-xs whitespace-pre-wrap break-words";
         let productos = [];
         try {
           productos = JSON.parse(factura.products);
@@ -900,11 +885,11 @@
           .join("\n");
 
         const tdTotal = document.createElement("td");
-        tdTotal.className = "py-3 px-4 font-bold text-green-800";
+        tdTotal.className = "py-3 px-4 font-bold text-green-800 whitespace-nowrap";
         tdTotal.textContent = `$${parseFloat(factura.total).toFixed(2)}`;
 
         const tdActions = document.createElement("td");
-        tdActions.className = "py-3 px-4";
+        tdActions.className = "py-3 px-4 whitespace-nowrap";
 
         const btnContainer = document.createElement("div");
         btnContainer.className = "flex flex-wrap gap-2 justify-start";

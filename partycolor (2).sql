@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-06-2025 a las 18:17:49
+-- Tiempo de generación: 05-07-2025 a las 07:08:39
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -120,15 +120,19 @@ CREATE TABLE `users` (
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `fecha_creacion` date NOT NULL DEFAULT current_timestamp()
+  `fecha_creacion` date NOT NULL DEFAULT current_timestamp(),
+  `token` varchar(255) NOT NULL,
+  `password_request` int(11) NOT NULL DEFAULT 2
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `password`, `fecha_creacion`) VALUES
-(10, 'jean sotomayor', 'jeanpiersotomayor@gmail.com', '$2y$10$OUPYbJiyzPvfecpuOt4nU.FTkLDJ1SukBzBYinn2Q7FJPCeMTgh7e', '2025-06-21');
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `fecha_creacion`, `token`, `password_request`) VALUES
+(8, 'hector', 'hectorguerra@gmail.com', '$2y$10$8A3qxCosuPNd8ZYi6FuCGeGov/lJcO/4JKVRfiP2ZIon0tAAWkEUC', '2025-06-21', '', 2),
+(9, 'hector', 'hectorsantiagoguerra004@gmail.com', '$2y$10$2F5hJS4tJFkI9bou7Fzbve7vKQJGhs.HK.HgChA0LppW3Aqb6BOf6', '2025-06-21', '', 2),
+(10, 'jean sotomayor', 'jeanpiersotomayor@gmail.com', '$2y$10$.TQCzIjel3yj8rjCgemNIulLAu8DjH8adJmlhZ.0SlFWuKs2H5yH2', '2025-07-05', '', 2);
 
 --
 -- Índices para tablas volcadas
@@ -166,7 +170,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `invoices`
 --
 ALTER TABLE `invoices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`

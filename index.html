@@ -473,7 +473,8 @@
         alert("Por favor, ingresa tu correo electrónico.");
         return;
       }
-      fetch("./backend/auth/recuperarContrasena.php", {
+      // console.log("Enviando solicitud de recuperación a:", email);
+      fetch("./backend/auth/recuperar.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),

@@ -27,7 +27,7 @@
                     Iniciar Sesión
                 </button>
             <a class="text-blue-600 hover:text-blue-800 font-semibold"
-             href="http://localhost/diplomado/partycolor.html">
+             href="http://localhost/diplomado/index.html">
                  Volver al stock
             </a>
         </div>

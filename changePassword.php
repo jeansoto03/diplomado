@@ -29,38 +29,41 @@ if (!verificarToken($id, $token)) {
     <link rel="stylesheet" href="../assets/css/main.css">
     <link rel="stylesheet" href="../assets/css/modals.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
-    <title>Celis-Horse</title>
+    <title>Cambio de contraseña</title>
 </head>
-<style>
-    
-</style>
+
 <body>
 
-    
-
-    <div class="ubicacionRegistro">
-        <div class="IniciarSesion">
-            <h2 class="recuperarTitulo">Recuperar contraseña</h2>
-            <form class="row g-3" action="./backend/auth/changePassword.php" method="POST">
-                <input type="hidden" name="id" value="<?php echo $id; ?>">
-                <input type="hidden" name="token" value="<?php echo $token; ?>">
-                <div class="col-md-12">
-                    <label for="inputAddress" class="form-label">Nueva contraseña</label>
-                    <input type="text" name="password" class="form-control" id="password" required>
-                </div>
-                <div class="col-md-12">
-                    <label for="inputAddress" class="form-label">Confirmar Nueva contraseña</label>
-                    <input type="text" name="repassword" class="form-control" id="repassword" required>
-                </div>
-                <div class="d-grid gap-2 col-6 mx-auto">
-                    <button type="submit" class="btn btn-primary">Continuar</button>
-                </div>
-            </form>
-            
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h2 class="text-center mb-4">Recuperar contraseña</h2>
+                <form class="shadow p-4 rounded" action="./backend/auth/changePassword.php" method="POST">
+                    <input type="hidden" name="id" value="<?php echo $id; ?>">
+                    <input type="hidden" name="token" value="<?php echo $token; ?>">
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Nueva contraseña</label>
+                        <input type="password" name="password" class="form-control" id="password" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="repassword" class="form-label">Confirmar Nueva contraseña</label>
+                        <input type="password" name="repassword" class="form-control" id="repassword" required>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Continuar</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
+</body>
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
